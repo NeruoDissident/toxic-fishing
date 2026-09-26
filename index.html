@@ -102,7 +102,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #afflict{font-size:11px;color:var(--warn);margin-top:2px;display:none}
 
 /* right rail buttons */
-#rail{right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;padding:8px}
+#rail{right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;padding:8px;z-index:31}
 .rbtn{
   width:112px;text-align:left;padding:7px 9px;font-size:13px;font-weight:600;letter-spacing:.01em;
   border:1px solid var(--edge);background:rgba(255,255,255,.03);
@@ -183,7 +183,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #fightname .r{font-family:var(--f-num);font-size:11px;letter-spacing:.14em}
 
 /* ---- modal terminal ---- */
-#modal{position:absolute;inset:0;background:rgba(2,5,7,.9);display:none;pointer-events:auto;z-index:30}
+#modal{position:absolute;inset:0;background:rgba(3,6,9,.975);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);display:none;pointer-events:auto;z-index:30}
 #modal.on{display:flex;flex-direction:column}
 #modal::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(to bottom,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
@@ -192,7 +192,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #mcount{font-family:var(--f-num);font-size:12px;color:var(--dim);letter-spacing:.08em}
 #mclose{font-family:var(--f-num);font-size:12px;letter-spacing:.1em;color:var(--dim);padding:6px 10px;border:1px solid var(--edge)}
 #mclose:hover{color:var(--ink);border-color:var(--accent)}
-#mbody{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px 28px;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+#mbody{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px 28px;scroll-padding-bottom:80px;touch-action:pan-y;-webkit-overflow-scrolling:touch}
 .tabs{display:flex;gap:4px;flex-wrap:wrap;padding:0 16px 10px;flex:0 0 auto}
 .tab{padding:5px 11px;font-size:12.5px;border:1px solid var(--edge);color:var(--dim);white-space:nowrap}
 .tab.sel{color:#fff;border-color:var(--accent);background:rgba(125,255,155,.13)}
@@ -267,18 +267,33 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes tout{to{opacity:0;transform:translateY(-8px)}}
 
 @media (max-width:620px){
-  #rail{flex-direction:row;flex-wrap:wrap;width:calc(100% - 20px);right:10px;justify-content:flex-end}
-  .rbtn{width:auto;padding:7px 11px;font-size:12px}
+  /* Portrait phone: a three-row bottom dock instead of free-floating boxes,
+     which previously let the six-slot bait strip wrap up into the Cast button. */
+  #rail{left:10px;right:10px;width:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));
+        flex-direction:row;flex-wrap:nowrap;justify-content:space-between;gap:4px;padding:6px}
+  .rbtn{width:auto;flex:1;min-width:0;padding:7px 4px;font-size:11.5px;text-align:center;
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .rbtn .k{display:none}
-  #dose{width:142px;bottom:calc(66px + env(safe-area-inset-bottom,0px))}
-  #baitbar{bottom:calc(66px + env(safe-area-inset-bottom,0px));left:auto;right:10px;transform:none;flex-wrap:wrap;max-width:calc(100% - 172px);justify-content:flex-end}
-  .bait{width:52px;font-size:9.5px}
-  #action{bottom:calc(140px + env(safe-area-inset-bottom,0px));width:148px;height:48px}
+  .rbtn[data-badge]::after{float:none;margin-left:4px}
+
+  #baitbar{left:10px;right:10px;width:auto;transform:none;gap:3px;padding:6px;
+           flex-wrap:nowrap;bottom:calc(58px + env(safe-area-inset-bottom,0px))}
+  .bait{width:auto;flex:1;min-width:0;font-size:9.5px;padding:5px 2px}
+
+  #dose{left:10px;right:auto;width:calc(50% - 13px);padding:7px 9px 8px;
+        bottom:calc(116px + env(safe-area-inset-bottom,0px))}
+  #doseval{font-size:22px}
+
+  #action{left:auto;right:10px;transform:none;width:calc(50% - 13px);height:56px;
+          bottom:calc(116px + env(safe-area-inset-bottom,0px))}
+
+  #locsub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #fight{right:10px}
-  #track{width:48px;height:min(42vh,300px)}
-  #fightname{right:64px;width:140px}
+  #track{width:48px;height:min(38vh,280px)}
+  #fightname{right:66px;width:130px}
   #fightname .n{font-size:15px}
   .wrapgrid{grid-template-columns:repeat(auto-fill,minmax(142px,1fr))}
+  #mbody{padding-bottom:78px}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -816,6 +831,22 @@ const A = (function(){
 })();
 
 /* ================================= WORLD ================================== */
+// Phones get a lighter scene. dt is clamped at 20fps to keep the physics sane,
+// which means a device slower than that runs in slow motion rather than
+// dropping frames -- so the budget matters more than it would otherwise.
+const MOBILE = (function(){
+  const mq = window.matchMedia;
+  // pointer:coarse catches phones and tablets in either orientation; a width
+  // test alone misses a landscape phone, which is wider than most breakpoints.
+  if(mq && mq('(pointer:coarse)').matches) return true;
+  if((navigator.maxTouchPoints||0) > 1) return true;
+  const s = window.screen || {};
+  return Math.min(s.width||9999, s.height||9999) <= 820;
+})();
+const Q = MOBILE
+  ? {px:1.5,  water:120, sky:[24,14], fall:0.55, blocks:38}
+  : {px:1.75, water:190, sky:[32,20], fall:1.00, blocks:56};
+
 const W = (function(){
   let renderer, scene, cam, water, waterU, sky, skyU, propGrp, fxGrp, rodGrp, rodTip,
       line, lineGeo, bobber, bobGlow, rings=[], parts=[], leap=null, stars,
@@ -845,7 +876,7 @@ const W = (function(){
 
   function init(canvas){
     renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,Q.px));
     renderer.setClearColor(0x04070a,1);
     scene=new THREE.Scene();
     cam=new THREE.PerspectiveCamera(66,1,0.1,900);
@@ -854,7 +885,7 @@ const W = (function(){
 
     // sky dome
     skyU={cA:{value:new THREE.Color('#071a16')},cB:{value:new THREE.Color('#0d3a2c')},cC:{value:new THREE.Color('#164a30')},t:{value:0}};
-    sky=new THREE.Mesh(new THREE.SphereGeometry(520,32,20), new THREE.ShaderMaterial({
+    sky=new THREE.Mesh(new THREE.SphereGeometry(520,Q.sky[0],Q.sky[1]), new THREE.ShaderMaterial({
       side:THREE.BackSide, depthWrite:false, uniforms:skyU,
       vertexShader:`varying vec3 vP; void main(){ vP=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
       fragmentShader:`uniform vec3 cA,cB,cC; uniform float t; varying vec3 vP;
@@ -883,7 +914,7 @@ const W = (function(){
       acc:{value:new THREE.Color('#7dff9b')}, fogC:{value:new THREE.Color('#0a2018')}, fogD:{value:0.017},
       bob:{value:new THREE.Vector2(0,-18)}, bobA:{value:0}
     };
-    const wg=new THREE.PlaneGeometry(760,760,190,190);
+    const wg=new THREE.PlaneGeometry(760,760,Q.water,Q.water);
     water=new THREE.Mesh(wg,new THREE.ShaderMaterial({uniforms:waterU,
       vertexShader:`uniform float t; uniform vec2 bob; uniform float bobA;
         varying vec3 vP; varying float vH;
@@ -921,27 +952,24 @@ const W = (function(){
     propGrp=new THREE.Group(); scene.add(propGrp);
     fxGrp=new THREE.Group(); scene.add(fxGrp);
 
-    // deck under the player
+    // The deck sits behind the camera so the lower frame is water, not an
+    // unlit slab -- in portrait its 5-unit span was filling a third of the
+    // screen. Only the rail stays forward, as framing near the waterline.
     const deck=new THREE.Group();
-    const pl=shell(new THREE.BoxGeometry(6,0.4,5),0x0a1116,0x5f8f8a,.6); pl.position.set(0,1.55,4.0); deck.add(pl);
+    const pl=shell(new THREE.BoxGeometry(6,0.4,5),0x0a1116,0x5f8f8a,.6); pl.position.set(0,1.55,7.0); deck.add(pl);
     for(let i=0;i<4;i++){ const p=shell(new THREE.BoxGeometry(0.22,3.6,0.22),0x0a1116,0x5f8f8a,.5);
-      p.position.set(i<2?-2.7:2.7,-0.1,i%2?2.0:5.8); deck.add(p); }
-    const railG=new THREE.BufferGeometry(); const rp=[];
-    [[-2.9,1.95,1.6],[2.9,1.95,1.6]].forEach(a=>{ rp.push(a[0],a[1],a[2], a[0],a[1]+0.85,a[2]); });
-    rp.push(-2.9,2.8,1.6, 2.9,2.8,1.6); rp.push(-2.9,1.95,1.6, 2.9,1.95,1.6);
-    railG.setAttribute('position',new THREE.Float32BufferAttribute(rp,3));
-    deck.add(new THREE.LineSegments(railG,new THREE.LineBasicMaterial({color:0x7fdcc9,transparent:true,opacity:.5})));
+      p.position.set(i<2?-2.7:2.7,-0.1,i%2?5.0:8.8); deck.add(p); }
     scene.add(deck);
 
     // rod (camera child)
     rodGrp=new THREE.Group();
-    const rod=new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.032,2.5,6),new THREE.MeshBasicMaterial({color:0x14201f}));
-    rod.position.set(0,1.25,0); rodGrp.add(rod);
-    rodGrp.add(edges(new THREE.CylinderGeometry(0.012,0.032,2.5,6),0x8ff0c0,.5).translateY(1.25));
-    const grip=solid(new THREE.CylinderGeometry(0.05,0.045,0.5,8),0x1e2a26); grip.position.set(0,0.1,0); rodGrp.add(grip);
-    const reelM=solid(new THREE.TorusGeometry(0.12,0.04,6,12),0x2a3a36); reelM.position.set(0.1,0.45,0); reelM.rotation.y=Math.PI/2; rodGrp.add(reelM);
-    rodTip=new THREE.Object3D(); rodTip.position.set(0,2.5,0); rodGrp.add(rodTip);
-    rodGrp.position.set(0.72,-0.72,-1.05); rodGrp.rotation.set(-0.30,-0.16,0.32);
+    const rod=new THREE.Mesh(new THREE.CylinderGeometry(0.010,0.026,2.1,6),new THREE.MeshBasicMaterial({color:0x14201f}));
+    rod.position.set(0,1.05,0); rodGrp.add(rod);
+    rodGrp.add(edges(new THREE.CylinderGeometry(0.010,0.026,2.1,6),0x8ff0c0,.45).translateY(1.05));
+    const grip=solid(new THREE.CylinderGeometry(0.042,0.038,0.42,8),0x1e2a26); grip.position.set(0,0.08,0); rodGrp.add(grip);
+    const reelM=shell(new THREE.TorusGeometry(0.085,0.028,6,12),0x1b2723,0x6fd8b0,.55); reelM.position.set(0.075,0.38,0); reelM.rotation.y=Math.PI/2; rodGrp.add(reelM);
+    rodTip=new THREE.Object3D(); rodTip.position.set(0,2.1,0); rodGrp.add(rodTip);
+    rodGrp.position.set(0.98,-0.86,-1.25); rodGrp.rotation.set(-0.26,-0.22,0.46); rodGrp.scale.setScalar(0.74);
     cam.add(rodGrp); scene.add(cam);
 
     // line
@@ -972,7 +1000,11 @@ const W = (function(){
     // drawing buffer to the window would stretch the render and skew aspect.
     const el=renderer.domElement;
     const w=el.clientWidth||window.innerWidth, h=el.clientHeight||window.innerHeight;
-    renderer.setSize(w,h,false); cam.aspect=w/h; cam.updateProjectionMatrix();
+    // Vertical FOV is fixed by default, so a tall portrait viewport spends its
+    // extra height looking at the deck. Narrow the FOV as aspect drops.
+    const a=w/h;
+    cam.fov = a>=1 ? 66 : clamp(66*Math.pow(a,0.30),48,66);
+    renderer.setSize(w,h,false); cam.aspect=a; cam.updateProjectionMatrix();
   }
 
   /* ---------------------------- prop builders ---------------------------- */
@@ -1042,10 +1074,10 @@ const W = (function(){
         b.position.set(rnd(-160,160),rnd(1,5),-rnd(90,250)); propGrp.add(b); }
       for(let i=0;i<9;i++){ const p=shell(new THREE.CylinderGeometry(0.7,0.7,rnd(20,70),6),0x070d10,loc.accent,.35);
         p.rotation.z=Math.PI/2; p.position.set(rnd(-90,90),rnd(2,8),-rnd(50,140)); propGrp.add(p); }
-      propGrp.add(fallField(0x9fffc0,220,1.6,-0.4,150,48));
+      propGrp.add(fallField(0x9fffc0,Math.round(220*Q.fall),1.6,-0.4,150,48));
     }
     else if(P==='city'){
-      for(let i=0;i<56;i++){
+      for(let i=0;i<Q.blocks;i++){
         const w=rnd(5,16), h=rnd(8,62), d=rnd(5,16);
         const b=shell(new THREE.BoxGeometry(w,h,d),0x050510,i%3?0x4a5a9a:0xff5fd0,.45);
         b.position.set(rnd(-210,210), h/2-rnd(2,9), -rnd(40,300)); propGrp.add(b);
@@ -1056,7 +1088,7 @@ const W = (function(){
       }
       for(let i=0;i<5;i++){ const a=shell(new THREE.CylinderGeometry(0.2,0.5,rnd(30,70),5),0x050510,0xff5fd0,.4);
         a.position.set(rnd(-150,150),rnd(20,50),-rnd(80,240)); propGrp.add(a); }
-      propGrp.add(fallField(0xff8fd6,180,1.4,-0.9,160,60));
+      propGrp.add(fallField(0xff8fd6,Math.round(180*Q.fall),1.4,-0.9,160,60));
     }
     else if(P==='mountains'){
       propGrp.add(ridgeLine(rr,170,78,0xff8a3d,44,.5));
@@ -1065,7 +1097,7 @@ const W = (function(){
       for(let i=0;i<8;i++){ const c=shell(new THREE.ConeGeometry(rnd(14,34),rnd(28,76),5),0x120805,0xff7a3a,.4);
         c.position.set(rnd(-200,200),0,-rnd(70,220)); propGrp.add(c); }
       for(let i=0;i<4;i++) propGrp.add(smokeColumn(rnd(-120,120),rnd(10,40),-rnd(90,200),0xff6a2a,50,8,60));
-      propGrp.add(fallField(0xffc9a0,420,1.9,-1.4,150,60));
+      propGrp.add(fallField(0xffc9a0,Math.round(420*Q.fall),1.9,-1.4,150,60));
     }
     else if(P==='industry'){
       for(let i=0;i<7;i++){ const s=shell(new THREE.CylinderGeometry(rnd(5,9),rnd(5,9),rnd(14,30),10),0x0d0d05,0xe8ff4a,.42);
@@ -1079,7 +1111,7 @@ const W = (function(){
         p.rotation.z=Math.PI/2; p.position.set(rnd(-120,120),rnd(3,16),-rnd(40,150)); propGrp.add(p); }
       propGrp.add(smokeColumn(-60,20,-130,0xffe05a,60,7,50));
       propGrp.add(smokeColumn(84,16,-160,0xffe05a,60,7,50));
-      propGrp.add(fallField(0xfff06a,260,1.7,-0.5,140,44));
+      propGrp.add(fallField(0xfff06a,Math.round(260*Q.fall),1.7,-0.5,140,44));
     }
     else if(P==='reactor'){
       const dome=new THREE.Group();
@@ -1097,7 +1129,7 @@ const W = (function(){
       arcG.setAttribute('position',new THREE.Float32BufferAttribute(ap,3));
       const arcs=new THREE.LineSegments(arcG,new THREE.LineBasicMaterial({color:0xa8ffff,transparent:true,opacity:.5}));
       arcs.userData={kind:'arc'}; parts.push(arcs); propGrp.add(arcs);
-      propGrp.add(fallField(0x7dfaff,300,1.5,-0.3,150,50));
+      propGrp.add(fallField(0x7dfaff,Math.round(300*Q.fall),1.5,-0.3,150,50));
     }
     else {
       for(let i=0;i<24;i++){ const c=shell(new THREE.ConeGeometry(rnd(2,8),rnd(20,70),4),0x0c0618,0xb87dff,.45);
@@ -1108,7 +1140,7 @@ const W = (function(){
         const pm=new THREE.Mesh(pg,new THREE.MeshBasicMaterial({color:i%2?0xb87dff:0x49ffd8,transparent:true,opacity:.075,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
         pm.position.set(rnd(-40,40),rnd(30,70),-rnd(140,260)); pm.rotation.z=rnd(-0.4,0.4);
         pm.userData={kind:'aurora',ph:rr()*6.28}; parts.push(pm); propGrp.add(pm); }
-      propGrp.add(fallField(0xd8a8ff,340,2.0,-0.25,150,64));
+      propGrp.add(fallField(0xd8a8ff,Math.round(340*Q.fall),2.0,-0.25,150,64));
     }
     bobber.children[2].material.color.set(loc.accent);
   }
