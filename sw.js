@@ -9,7 +9,7 @@
  * a stale build can never outlive its version.
  */
 
-const CACHE = 'toxic-fishing-v1';
+const CACHE = 'toxic-fishing-v2';
 
 const PRECACHE = [
   './',

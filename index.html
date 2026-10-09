@@ -157,12 +157,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 
 /* ---- fight minigame ---- */
-#fight{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:none;pointer-events:none}
+#fight{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:none;pointer-events:none;width:56px}
 #fight.on{display:block}
 #track{
   position:relative;width:56px;height:min(48vh,360px);
   background:linear-gradient(180deg,rgba(6,20,24,.92),rgba(4,10,14,.92));
-  border:1px solid var(--edge);overflow:hidden;
+  border:1px solid var(--edge);overflow:visible;
 }
 #track.warn{border-color:var(--hot);box-shadow:0 0 0 1px var(--hot),inset 0 0 30px rgba(255,74,61,.4)}
 #tens.high{border-color:var(--hot);animation:tpulse .34s infinite alternate}
@@ -177,8 +177,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #progfill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,var(--accent2),var(--accent))}
 #tens{position:absolute;right:-15px;top:0;bottom:0;width:10px;background:rgba(255,255,255,.07);border:1px solid var(--edge)}
 #tensfill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,var(--clean),var(--warn) 62%,var(--hot))}
-#fightlbl{margin-top:8px;text-align:center;font-family:var(--f-num);font-size:10px;letter-spacing:.12em;color:var(--dim)}
-#fightname{display:none;position:absolute;right:76px;top:50%;transform:translateY(-50%);text-align:right;width:190px;pointer-events:none}
+#fightlbl{margin-top:8px;text-align:center;white-space:nowrap;width:max-content;position:relative;left:50%;transform:translateX(-50%);font-family:var(--f-num);font-size:10px;letter-spacing:.12em;color:var(--dim)}
+#fightname{display:none;position:absolute;right:98px;top:50%;transform:translateY(-50%);text-align:right;width:190px;pointer-events:none}
 #fightname .n{font-size:17px;font-weight:700;text-shadow:0 0 14px rgba(0,0,0,.9)}
 #fightname .r{font-family:var(--f-num);font-size:11px;letter-spacing:.14em}
 
@@ -260,8 +260,51 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #tctrl kbd{border:1px solid var(--edge);padding:1px 6px;margin:0 2px}
 #wipe{margin-top:14px;font-family:var(--f-num);font-size:11px;color:#55666b;letter-spacing:.1em}
 
-#toast{position:absolute;left:50%;transform:translateX(-50%);top:62px;display:flex;flex-direction:column;gap:5px;align-items:center;pointer-events:none;z-index:25}
-.tst{background:rgba(6,14,18,.92);border:1px solid var(--edge);border-left:2px solid var(--accent);
+/* lab jobs tracker */
+#jobs{top:68px;left:10px;width:262px;padding:7px 10px 8px;text-align:left;display:block;font-size:12px;cursor:pointer}
+#jobs .jhead{display:flex;justify-content:space-between;font-family:var(--f-num);font-size:10px;letter-spacing:.16em;color:var(--dim)}
+#jobs .jhead b{color:var(--accent);font-weight:400}
+#jobs .jlist{margin-top:5px;display:flex;flex-direction:column;gap:3px}
+.job{display:flex;gap:7px;align-items:baseline;line-height:1.3}
+.job i{flex:0 0 auto;width:8px;height:8px;border:1px solid var(--edge);transform:translateY(1px)}
+.job.done i{background:var(--accent);border-color:var(--accent)}
+.job.done span{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(255,255,255,.25)}
+.job span{flex:1;min-width:0}
+.job em{font-style:normal;font-family:var(--f-num);font-size:11px;color:var(--dim)}
+#optbtn{flex:0 0 auto;width:34px;align-self:center;height:34px;display:grid;place-items:center;border:1px solid var(--edge);color:var(--dim);pointer-events:auto}
+#optbtn:hover,#optbtn:focus-visible{color:#fff;border-color:var(--accent)}
+
+/* focus mode: the fight owns the screen */
+#hud.fighting #rail,#hud.fighting #baitbar,#hud.fighting #jobs{opacity:0;pointer-events:none}
+#rail,#baitbar,#jobs{transition:opacity .25s}
+
+/* first-catch coach */
+#coach{position:absolute;right:98px;top:50%;transform:translateY(-50%);width:232px;display:none;pointer-events:none;
+  background:var(--panel);border:1px solid var(--edge);padding:10px 12px;
+  clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px)}
+#coach.on{display:block}
+#coach .ct{font-family:var(--f-num);font-size:10px;letter-spacing:.16em;color:var(--dim)}
+#coach .cm{font-size:15px;font-weight:600;line-height:1.3;margin:5px 0 9px;min-height:2.6em}
+#coach .cl{font-size:11.5px;color:var(--dim);line-height:1.35;margin-top:4px}
+#coach .cl b{font-weight:600}
+
+/* settings */
+.optrow{display:flex;align-items:center;gap:12px;border:1px solid var(--edge);padding:10px 12px;margin-bottom:7px;max-width:620px;background:rgba(255,255,255,.02);flex-wrap:wrap}
+.optrow .bd{flex:1;min-width:150px}
+.optrow h4{margin:0;font-size:14px}
+.optrow p{margin:2px 0 0;font-size:11.5px;color:var(--dim)}
+.seg{display:flex;gap:3px}
+.seg button{padding:6px 11px;border:1px solid var(--edge);font-size:12px;color:var(--dim)}
+.seg button.sel{border-color:var(--accent);color:#fff;background:rgba(125,255,155,.13)}
+.optrow input[type=range]{width:150px;accent-color:var(--accent)}
+.danger{border-color:var(--hot)!important;color:var(--hot)!important}
+
+#rextra{margin-top:6px;font-size:12px;line-height:1.5}
+#rextra div{color:var(--accent)}
+#rextra .m{color:var(--anom);font-family:var(--f-num);letter-spacing:.14em;font-size:11px}
+
+#toast{position:absolute;left:50%;transform:translateX(-50%);top:62px;width:clamp(280px,calc(100% - 590px),560px);display:flex;flex-direction:column;gap:5px;align-items:center;pointer-events:none;z-index:25}
+.tst{text-align:center;background:rgba(6,14,18,.92);border:1px solid var(--edge);border-left:2px solid var(--accent);
   padding:6px 13px;font-size:13px;animation:tin .3s ease-out, tout .4s ease-in 2.4s forwards}
 @keyframes tin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @keyframes tout{to{opacity:0;transform:translateY(-8px)}}
@@ -288,9 +331,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
           bottom:calc(116px + env(safe-area-inset-bottom,0px))}
 
   #locsub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  #fight{right:10px}
+  #jobs{width:auto;right:10px;padding:6px 10px}
+  #jobs .jlist{display:none}
+  #jobs .jhead{font-size:10.5px}
+  #jobs .jhead span::after{content:' · tap to view'}
+  #toast{top:108px;width:calc(100% - 20px)}
+  #coach{right:92px;width:min(204px,calc(100% - 104px))}
+  #coach .cm{font-size:14px}
+  #optbtn{width:30px;height:30px}
+  #fight{right:20px;width:48px}
   #track{width:48px;height:min(38vh,280px)}
-  #fightname{right:66px;width:130px}
+  #fightname{right:92px;width:130px}
   #fightname .n{font-size:15px}
   .wrapgrid{grid-template-columns:repeat(auto-fill,minmax(142px,1fr))}
   #mbody{padding-bottom:78px}
@@ -321,7 +372,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
         <span><b id="cred">0</b> cr</span>
         <span style="color:var(--dim);font-size:11px" id="codexn">0/40 logged</span>
       </div>
+      <button id="optbtn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
+
+    <button class="hudbox" id="jobs" aria-label="Lab jobs"></button>
 
     <div class="hudbox" id="dose">
       <div class="lbl">DOSIMETER</div>
@@ -347,6 +401,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <div id="bite">!</div>
 
     <div id="fightname"><div class="n"></div><div class="r"></div></div>
+    <div id="coach"><div class="ct">First catch</div><div class="cm"></div>
+      <div class="cl"><b style="color:var(--accent)">Box</b> hold to raise it, let go to drop it</div>
+      <div class="cl"><b style="color:var(--accent2)">Left bar</b> progress, fills while the fish is in the box</div>
+      <div class="cl"><b style="color:var(--warn)">Right bar</b> line tension, let go before it fills</div></div>
     <div id="fight">
       <div id="track">
         <div id="prog"><div id="progfill"></div></div>
@@ -366,6 +424,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <div id="rname">Rustgill Minnow</div>
     <div id="rstats"></div>
     <div id="rnew">NEW SPECIMEN LOGGED</div>
+    <div id="rextra"></div>
     <div id="rgain"></div>
     <button id="rcont">Keep fishing</button>
   </div></div>
@@ -382,7 +441,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <button id="start">Start the shift</button>
     <div id="tctrl">
       <kbd>drag</kbd> look &nbsp;·&nbsp; <kbd>space</kbd> cast, hook, reel<br>
-      <kbd>1-6</kbd> bait &nbsp;·&nbsp; <kbd>C</kbd> codex &nbsp;·&nbsp; <kbd>K</kbd> skills &nbsp;·&nbsp; <kbd>B</kbd> supply &nbsp;·&nbsp; <kbd>M</kbd> travel
+      <kbd>1-6</kbd> bait &nbsp;·&nbsp; <kbd>J</kbd> jobs &nbsp;·&nbsp; <kbd>C</kbd> codex &nbsp;·&nbsp; <kbd>K</kbd> skills &nbsp;·&nbsp; <kbd>B</kbd> supply &nbsp;·&nbsp; <kbd>M</kbd> travel
     </div>
     <button id="wipe">erase saved shift</button>
   </div>
@@ -624,6 +683,53 @@ const AFFLICT = [
   {id:'ringing',name:'Ringing', desc:'The quarry moves faster and less predictably today.'}
 ];
 
+/* Gear: the late-game credit sink. Multiplies with skills rather than replacing them. */
+const GEAR = [
+  {id:'rod', name:'Rod', fx:[{box:1,prog:1},{box:1.07,prog:1.06},{box:1.14,prog:1.12},{box:1.22,prog:1.20}], tiers:[
+    {name:'Salvage Rod',      cost:0,    desc:'Pulled out of a skip behind the intake building.'},
+    {name:'Carbon Blank',     cost:350,  desc:'Box 7% taller, landing 6% faster.'},
+    {name:'Graphene Spine',   cost:1400, desc:'Box 14% taller, landing 12% faster.'},
+    {name:'Control-Rod Pole', cost:4200, desc:'Box 22% taller, landing 20% faster. Do not ask where it came from.'}]},
+  {id:'line', name:'Line', fx:[{tens:1},{tens:1.10},{tens:1.20},{tens:1.32}], tiers:[
+    {name:'Rusted Mono',            cost:0,    desc:'It has been knotted back together more times than anyone counted.'},
+    {name:'Kevlar Braid',           cost:300,  desc:'Takes 10% more strain before it parts.'},
+    {name:'Tungsten Leader',        cost:1200, desc:'Takes 20% more strain before it parts.'},
+    {name:'Unidentified Filament',  cost:3800, desc:'Takes 32% more strain. Nobody at the lab remembers making it.'}]},
+  {id:'suit', name:'Suit', fx:[{dose:1},{dose:0.90},{dose:0.80},{dose:0.68}], tiers:[
+    {name:"Painter's Mask",      cost:0,    desc:'Better than nothing, in the sense that it is technically something.'},
+    {name:'Tyvek Coverall',      cost:450,  desc:'10% less dose from everything you land.'},
+    {name:'Lead-Lined Coverall', cost:1600, desc:'20% less dose from everything you land.'},
+    {name:'Level A Suit',        cost:5000, desc:'32% less dose. Fully sealed, and very hard to cast in.'}]}
+];
+const GEARBY = {}; GEAR.forEach(g=>GEARBY[g.id]=g);
+
+/* Daily conditions. Seeded per water per day, so a reload never rerolls the weather. */
+const CONDS = {
+  clear:{name:'Still air',  desc:'No modifiers. A good day to work.'},
+  rain: {name:'Acid rain',  desc:'Bites come 20% sooner. Landed fish carry 15% more dose.'},
+  fog:  {name:'Dense fog',  desc:'Low light brings better fish up. Stronger pull toward rare.'},
+  ash:  {name:'Ash storm',  desc:'Fish sell for 20% more. The box is 8% shorter in the wind.'},
+  bloom:{name:'Glow-bloom', desc:'Anomalies are twice as likely. Landed fish carry 20% more dose.'}
+};
+const CONDW = {
+  pond:{clear:3,rain:2,fog:2,bloom:1}, city:{clear:2,rain:3,fog:2,bloom:1}, ridge:{clear:2,ash:4,fog:1},
+  basin:{clear:2,rain:2,ash:2,bloom:1}, bay:{clear:2,fog:2,bloom:3}, shelf:{clear:2,fog:3,bloom:2}
+};
+
+/* Finishing a codex page grants a permanent perk. Derived from the codex, never stored. */
+const PERKS = {
+  pond: {name:'Steady Footing',       desc:'Box 5% taller in every water.'},
+  city: {name:"Meter-Reader's Route", desc:'Bites arrive 10% sooner in every water.'},
+  ridge:{name:'Heat-Hardened Line',   desc:'Line takes 8% more strain before it parts.'},
+  basin:{name:'Settled Stomach',      desc:'8% less dose from everything you land.'},
+  bay:  {name:'Blue Light',           desc:'Stronger pull toward rare in every water.'},
+  shelf:{name:'Clean Water',          desc:'Clean fish shed twice as much dose.'},
+  any:  {name:'Null Sight',           desc:'Anomalies are 50% more likely on every bait.'}
+};
+
+/* Later waters fight harder, so gear and skills keep mattering past the pond. */
+const LOCDIFF = {pond:1, city:1.06, ridge:1.12, basin:1.18, bay:1.25, shelf:1.32};
+
 /* ------------------------------- state ----------------------------------- */
 const SAVEKEY = 'toxicfishing.v1';
 const S = {
@@ -631,7 +737,8 @@ const S = {
   skills:{}, codex:{}, best:{}, counts:{},
   baits:{grub:30, glow:0, roe:0, cell:0, chum:0, null:0},
   cures:{iodine:1, chel:0, purge:0},
-  bait:'grub', unlocked:['pond'], afflict:null, totalCatch:0, seen:false
+  bait:'grub', unlocked:['pond'], afflict:null, totalCatch:0, seen:false,
+  gear:{rod:0,line:0,suit:0}, jobs:[], jobDay:0, mut:{}, ended:false, tutDone:false, tutFights:0
 };
 function save(){ try{ localStorage.setItem(SAVEKEY, JSON.stringify(S)); }catch(e){} }
 function load(){
@@ -639,12 +746,37 @@ function load(){
     const raw = localStorage.getItem(SAVEKEY); if(!raw) return false;
     const o = JSON.parse(raw); if(!o || typeof o!=='object') return false;
     Object.keys(S).forEach(k=>{ if(o[k]!==undefined) S[k]=o[k]; });
+    // Migration from pre-v2 saves: anyone who has already caught a fish
+    // skips the first-catch coaching.
+    if(o.tutDone===undefined && (o.totalCatch||0)>0){ S.tutDone=true; S.tutFights=2; }
+    S.gear=Object.assign({rod:0,line:0,suit:0}, S.gear||{});
+    if(!Array.isArray(S.jobs)) S.jobs=[];
+    if(!S.mut||typeof S.mut!=='object') S.mut={};
     if(!LOCBY[S.loc]) S.loc='pond';
     if(!BAITBY[S.bait]) S.bait='grub';
     return true;
   }catch(e){ return false; }
 }
 const sk = id => S.skills[id]||0;
+const gearFx = id => GEARBY[id].fx[S.gear[id]||0];
+const pageDone = id => FISH.filter(f=>f.loc===id).every(f=>S.codex[f.id]);
+const mutRate = () => S.ended ? 0.045 : 0.015;
+function condFor(loc,day){
+  if(day===1 && loc==='pond') return 'clear';
+  const w=CONDW[loc]; let tot=0; for(const k in w) tot+=w[k];
+  let x=mulberry(hashStr('cond:'+loc+':'+day))()*tot;
+  for(const k in w){ x-=w[k]; if(x<=0) return k; }
+  return 'clear';
+}
+
+/* Settings live under their own key so erasing a save keeps them. */
+const OPTKEY = 'toxicfishing.opt';
+const OPT = {sound:true, music:0.6, sfx:0.9, haptic:true, quality:'auto'};
+try{ const o=JSON.parse(localStorage.getItem(OPTKEY)||'null');
+  if(o) Object.keys(OPT).forEach(k=>{ if(o[k]!==undefined) OPT[k]=o[k]; }); }catch(e){}
+function saveOpt(){ try{ localStorage.setItem(OPTKEY, JSON.stringify(OPT)); }catch(e){} }
+const CAN_BUZZ = typeof navigator!=='undefined' && typeof navigator.vibrate==='function';
+function buzz(p){ if(!OPT.haptic||!CAN_BUZZ) return; try{ navigator.vibrate(p); }catch(e){} }
 const xpNeed = l => Math.round(36*Math.pow(l,1.05));
 const meltLine = () => sk('halflife') ? 135 : 100;
 
@@ -654,7 +786,8 @@ const R = {
   power:0, holding:false, holdT:0,
   waitT:0, biteT:0, hooked:null, castDepth:0,
   playing:false, secondWind:false, shiftCred:0, shiftFish:0,
-  fight:null, lastTick:0, geiger:0
+  fight:null, lastTick:0, geiger:0,
+  cond:'clear', hot:null, hotN:0, inHot:false, jumpT:4, aimOn:false, tut:false, queue:[]
 };
 
 /* ------------------------------ fish art --------------------------------- */
@@ -760,11 +893,13 @@ function fishArt(f){
 
 /* -------------------------------- audio ---------------------------------- */
 const A = (function(){
-  let ctx=null, master=null, droneG=null, reelG=null, reelOsc=null, on=true, nodes=[];
+  let ctx=null, master=null, musicBus=null, sfxBus=null, droneG=null, reelG=null, reelOsc=null, on=true, nodes=[];
   function init(){
     if(ctx) return;
     try{ ctx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ on=false; return; }
-    master=ctx.createGain(); master.gain.value=0.5; master.connect(ctx.destination);
+    master=ctx.createGain(); master.gain.value=OPT.sound?0.5:0; master.connect(ctx.destination);
+    musicBus=ctx.createGain(); musicBus.gain.value=OPT.music; musicBus.connect(master);
+    sfxBus=ctx.createGain(); sfxBus.gain.value=OPT.sfx; sfxBus.connect(master);
   }
   function noiseBuf(len){
     const b=ctx.createBuffer(1,ctx.sampleRate*len,ctx.sampleRate), d=b.getChannelData(0);
@@ -777,21 +912,30 @@ const A = (function(){
     g.gain.setValueAtTime(0,ctx.currentTime);
     g.gain.linearRampToValueAtTime(vol||0.12,ctx.currentTime+0.008);
     g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur);
-    o.connect(g); g.connect(master); o.start(); o.stop(ctx.currentTime+dur+0.02);
+    o.connect(g); g.connect(sfxBus); o.start(); o.stop(ctx.currentTime+dur+0.02);
   }
   function noise(dur,f,q,vol){
     if(!ctx||!on) return; const s=ctx.createBufferSource(); s.buffer=noiseBuf(Math.max(0.1,dur));
     const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=f; bp.Q.value=q||1;
     const g=ctx.createGain(); g.gain.setValueAtTime(vol||0.2,ctx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur);
-    s.connect(bp); bp.connect(g); g.connect(master); s.start(); s.stop(ctx.currentTime+dur);
+    s.connect(bp); bp.connect(g); g.connect(sfxBus); s.start(); s.stop(ctx.currentTime+dur);
   }
   return {
-    start(){ init(); if(ctx&&ctx.state==='suspended') ctx.resume(); },
+    // iOS leaves the context "interrupted" after a call or app switch; any
+    // later gesture brings it back through start().
+    start(){ init(); if(ctx&&ctx.state!=='running'&&ctx.state!=='closed') ctx.resume().catch(()=>{}); },
+    suspend(){ if(ctx&&ctx.state==='running') ctx.suspend().catch(()=>{}); },
+    setVol(){ if(!ctx) return; const t=ctx.currentTime;
+      master.gain.setTargetAtTime(OPT.sound?0.5:0,t,0.05);
+      musicBus.gain.setTargetAtTime(OPT.music,t,0.05);
+      sfxBus.gain.setTargetAtTime(OPT.sfx,t,0.05); },
+    plop(v){ noise(0.22,760,0.9,0.05*(v||1)); },
+    job(){ [659,880,1175,1568].forEach((f,i)=>setTimeout(()=>blip(f,0.18,'triangle',0.11),i*70)); },
     drone(col){
       init(); if(!ctx) return;
       if(droneG){ try{ droneG.gain.setTargetAtTime(0,ctx.currentTime,.4);}catch(e){} nodes.forEach(n=>{try{n.stop(ctx.currentTime+1.6)}catch(e){}}); nodes=[]; }
-      droneG=ctx.createGain(); droneG.gain.value=0; droneG.connect(master);
+      droneG=ctx.createGain(); droneG.gain.value=0; droneG.connect(musicBus);
       droneG.gain.setTargetAtTime(0.055,ctx.currentTime,1.2);
       const base=[48,55,62,41,36,58][col%6];
       [1,1.5,2.99].forEach((m,i)=>{
@@ -809,7 +953,7 @@ const A = (function(){
     bite(){ blip(880,0.07,'square',0.16); setTimeout(()=>blip(1320,0.09,'square',0.14),70); },
     hook(){ blip(300,0.12,'sawtooth',0.14,700); noise(0.25,1400,2,0.1); },
     reelOn(){ init(); if(!ctx||reelOsc) return;
-      reelG=ctx.createGain(); reelG.gain.value=0; reelG.connect(master);
+      reelG=ctx.createGain(); reelG.gain.value=0; reelG.connect(sfxBus);
       reelOsc=ctx.createOscillator(); reelOsc.type='sawtooth'; reelOsc.frequency.value=70;
       const f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=420; f.Q.value=6;
       reelOsc.connect(f); f.connect(reelG); reelOsc.start();
@@ -841,15 +985,19 @@ const MOBILE = (function(){
   if(mq && mq('(pointer:coarse)').matches) return true;
   if((navigator.maxTouchPoints||0) > 1) return true;
   const s = window.screen || {};
-  return Math.min(s.width||9999, s.height||9999) <= 820;
+  // Phones are 360-430 CSS px on the short side; 820 caught 1366x768 laptops.
+  return Math.min(s.width||9999, s.height||9999) <= 600;
 })();
-const Q = MOBILE
+const LIGHT = OPT.quality==='low' ? true : (OPT.quality==='high' ? false : MOBILE);
+const Q = LIGHT
   ? {px:1.5,  water:120, sky:[24,14], fall:0.55, blocks:38}
   : {px:1.75, water:190, sky:[32,20], fall:1.00, blocks:56};
 
 const W = (function(){
   let renderer, scene, cam, water, waterU, sky, skyU, propGrp, fxGrp, rodGrp, rodTip,
       line, lineGeo, bobber, bobGlow, rings=[], parts=[], leap=null, stars,
+      hotGrp, hotOn=false, hotX=0, hotZ=0, hotR=0, hotCol=0xffffff, hotT=0, curCond='clear',
+      jumps=[], texCache={}, thrashT=0,
       yaw=0, pitch=-0.06, tYaw=0, tPitch=-0.06, shake=0, clock=0;
   const bobPos = new THREE.Vector3(0,0,-18);
   const bobVel = new THREE.Vector3();
@@ -912,11 +1060,13 @@ const W = (function(){
     waterU={
       t:{value:0}, cA:{value:new THREE.Color('#0d3a2e')}, cB:{value:new THREE.Color('#123f30')},
       acc:{value:new THREE.Color('#7dff9b')}, fogC:{value:new THREE.Color('#0a2018')}, fogD:{value:0.017},
-      bob:{value:new THREE.Vector2(0,-18)}, bobA:{value:0}
+      bob:{value:new THREE.Vector2(0,-18)}, bobA:{value:0},
+      hot:{value:new THREE.Vector3(0,0,1)}, hotA:{value:0}, hotC:{value:new THREE.Color('#31e0ff')},
+      aim:{value:new THREE.Vector3(0,0,0)}, aimC:{value:new THREE.Color('#ffffff')}
     };
     const wg=new THREE.PlaneGeometry(760,760,Q.water,Q.water);
     water=new THREE.Mesh(wg,new THREE.ShaderMaterial({uniforms:waterU,
-      vertexShader:`uniform float t; uniform vec2 bob; uniform float bobA;
+      vertexShader:`uniform float t; uniform vec2 bob; uniform float bobA; uniform vec3 hot; uniform float hotA;
         varying vec3 vP; varying float vH;
         void main(){
           vec3 p=position;
@@ -925,17 +1075,24 @@ const W = (function(){
                   + sin((p.x-p.y)*0.28-t*2.1)*0.06;
           float d=length(p.xy-bob);
           w += sin(d*1.5 - t*7.0)*exp(-d*0.30)*bobA*0.55;
+          float hd=length(p.xy-hot.xy);
+          w += sin(hd*2.6 - t*6.0)*0.11*smoothstep(hot.z,0.0,hd)*hotA;
           p.z+=w; vH=w; vP=p;
           gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);
         }`,
-      fragmentShader:`uniform vec3 cA,cB,acc,fogC; uniform float fogD,t; varying vec3 vP; varying float vH;
+      fragmentShader:`uniform vec3 cA,cB,acc,fogC,hot,hotC,aim,aimC; uniform float fogD,t,hotA; varying vec3 vP; varying float vH;
         void main(){
           float d=length(vP.xy);
           float n=clamp(vH*0.6+0.5,0.0,1.0);
           vec3 col=mix(cA,cB,n);
           // neon contour lines on wave crests
+          // The long swell crests under the player every ~14s; keyed on raw height
+          // that lit the whole foreground. Crest glow lives at a distance, and the
+          // near water gets thin topographic contour lines instead.
           float crest=smoothstep(0.42,0.78,vH);
-          col+=acc*crest*0.55;
+          col+=acc*crest*0.55*smoothstep(5.0,28.0,d);
+          float contour=smoothstep(0.465,0.5,abs(fract(vH*2.2)-0.5));
+          col+=acc*contour*0.16*(1.0-smoothstep(12.0,45.0,d));
           // survey grid
           vec2 g=abs(fract(vP.xy*0.09)-0.5);
           float gl=1.0-smoothstep(0.0,0.045,min(g.x,g.y));
@@ -943,6 +1100,15 @@ const W = (function(){
           // sub-surface shimmer
           float sh=sin(vP.x*0.5+t*1.4)*sin(vP.y*0.43-t*1.1);
           col+=acc*max(0.0,sh)*0.06;
+          // hotspot: a boiling patch -- warm core, flickering cells, a breathing rim
+          float hd=length(vP.xy-hot.xy);
+          float inH=smoothstep(hot.z,hot.z*0.30,hd)*hotA;
+          float cell=fract(sin(dot(floor(vP.xy*1.7)+floor(t*2.6),vec2(12.9898,78.233)))*43758.5453);
+          col+=hotC*(inH*0.26 + inH*step(0.86,cell)*0.60);
+          col+=hotC*smoothstep(0.40,0.0,abs(hd-hot.z*(0.92+0.06*sin(t*2.2))))*0.55*hotA;
+          // aim ring: where the cast will land
+          float ad=length(vP.xy-aim.xy);
+          col+=aimC*(smoothstep(0.17,0.0,abs(ad-1.25))+smoothstep(0.24,0.0,ad)*0.8)*aim.z;
           float f=1.0-exp(-fogD*fogD*d*d*1.25);
           col=mix(col,fogC,clamp(f,0.0,1.0));
           gl_FragColor=vec4(col,1.0);
@@ -951,6 +1117,7 @@ const W = (function(){
 
     propGrp=new THREE.Group(); scene.add(propGrp);
     fxGrp=new THREE.Group(); scene.add(fxGrp);
+    hotGrp=new THREE.Group(); scene.add(hotGrp);
 
     // The deck sits behind the camera so the lower frame is water, not an
     // unlit slab -- in portrait its 5-unit span was filling a third of the
@@ -1037,7 +1204,11 @@ const W = (function(){
   }
   function fallField(col,n,size,speed,area,h){
     const geo=new THREE.BufferGeometry(), pos=[];
-    for(let i=0;i<n;i++) pos.push(rnd(-area,area), rnd(0,h), rnd(-area,area));
+    // Keep a clear column around the player: a size-attenuated additive sprite
+    // drifting within a metre of the lens fills the whole screen with colour.
+    for(let i=0;i<n;i++){ let x=rnd(-area,area), z=rnd(-area,area);
+      if(Math.hypot(x,z-4.2)<11) x=(x<0?-1:1)*(11+Math.random()*24);
+      pos.push(x, rnd(0,h), z); }
     geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
     const m=new THREE.Points(geo,new THREE.PointsMaterial({map:DOT,color:col,size:size,transparent:true,opacity:.5,blending:THREE.AdditiveBlending,depthWrite:false}));
     m.userData={kind:'fall',speed:speed,h:h}; parts.push(m); return m;
@@ -1055,14 +1226,44 @@ const W = (function(){
     return g;
   }
 
-  function build(loc,seed){
+  function rainField(n,col){
+    const geo=new THREE.BufferGeometry(), pos=[];
+    for(let i=0;i<n;i++){ const x=rnd(-70,70), y=rnd(0,44), z=4.2-rnd(3,95);
+      pos.push(x,y,z, x+0.12,y-1.7,z); }
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    const m=new THREE.LineSegments(geo,new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.52}));
+    m.userData={kind:'rain'}; m.frustumCulled=false; parts.push(m); return m;
+  }
+  function moteField(n,col){
+    const geo=new THREE.BufferGeometry(), pos=[], y0=new Float32Array(n);
+    for(let i=0;i<n;i++){ const y=rnd(0.3,3.2); y0[i]=y; pos.push(rnd(-60,60), y, 4.2-rnd(6,90)); }
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    const m=new THREE.Points(geo,new THREE.PointsMaterial({map:DOT,color:col,size:1.1,transparent:true,opacity:.75,blending:THREE.AdditiveBlending,depthWrite:false}));
+    m.userData={kind:'motes',y0}; parts.push(m); return m;
+  }
+
+  function build(loc,seed,cond){
     const rr=mulberry(seed);
-    clearGroup(propGrp); clearGroup(fxGrp); parts=[]; rings=[]; leap=null;
+    clearGroup(propGrp); clearGroup(fxGrp); clearGroup(hotGrp); parts=[]; rings=[]; leap=null; jumps=[];
+    hotOn=false; waterU.hotA.value=0; waterU.aim.value.z=0;
+    curCond=cond||'clear';
     const acc=new THREE.Color(loc.accent), acc2=new THREE.Color(loc.accent2);
     skyU.cA.value.set(loc.sky[0]); skyU.cB.value.set(loc.sky[1]); skyU.cC.value.set(loc.sky[2]);
     waterU.cA.value.set(loc.water); waterU.cB.value.copy(new THREE.Color(loc.water).lerp(acc,0.22));
     waterU.acc.value.copy(acc); waterU.fogC.value.set(loc.fogc); waterU.fogD.value=loc.fog;
     scene.fog=new THREE.FogExp2(new THREE.Color(loc.fogc).getHex(),loc.fog);
+    // Each condition gets its own colour identity, not just a modifier.
+    const fogMul = curCond==='fog'?2.6 : curCond==='ash'?1.6 : curCond==='rain'?1.3 : 1;
+    scene.fog.density=loc.fog*fogMul; waterU.fogD.value=loc.fog*fogMul;
+    const fogCol=new THREE.Color(loc.fogc);
+    if(curCond==='fog'){ fogCol.lerp(new THREE.Color('#a9c2ba'),0.30);
+      skyU.cB.value.lerp(fogCol,0.65); skyU.cC.value.lerp(fogCol,0.85); }
+    if(curCond==='ash'){ fogCol.lerp(new THREE.Color('#4a3226'),0.65);
+      skyU.cC.value.lerp(new THREE.Color('#8a4a24'),0.55); skyU.cB.value.lerp(new THREE.Color('#2a1812'),0.5); }
+    if(curCond==='rain'){ fogCol.multiplyScalar(0.75);
+      skyU.cA.value.multiplyScalar(0.6); skyU.cB.value.multiplyScalar(0.7); skyU.cC.value.multiplyScalar(0.8); }
+    if(curCond==='bloom'){ waterU.acc.value.copy(acc).multiplyScalar(1.55); skyU.cC.value.lerp(acc2,0.32); }
+    scene.fog.color.copy(fogCol); waterU.fogC.value.copy(fogCol);
 
     const P=loc.props;
     propGrp.add(ridgeLine(rr,300,34,acc.clone().multiplyScalar(0.55).getHex(),52,.3));
@@ -1142,7 +1343,47 @@ const W = (function(){
         pm.userData={kind:'aurora',ph:rr()*6.28}; parts.push(pm); propGrp.add(pm); }
       propGrp.add(fallField(0xd8a8ff,Math.round(340*Q.fall),2.0,-0.25,150,64));
     }
+    if(curCond==='rain')  propGrp.add(rainField(Math.round(1300*Q.fall), 0xcfeef5));
+    if(curCond==='ash')   propGrp.add(fallField(0xb8aca2, Math.round(1000*Q.fall), 2.3, -1.15, 110, 50));
+    if(curCond==='bloom') propGrp.add(moteField(Math.round(170*Q.fall), loc.accent2));
     bobber.children[2].material.color.set(loc.accent);
+  }
+
+  /* ---- hotspot: drawn in the water shader, plus rising bubbles above it ---- */
+  function setHot(x,z,r,col){
+    clearGroup(hotGrp);
+    if(x===null){ hotOn=false; waterU.hotA.value=0; return; }
+    hotOn=true; hotX=x; hotZ=z; hotR=r; hotCol=new THREE.Color(col).getHex(); hotT=0;
+    waterU.hot.value.set(x,-z,r); waterU.hotA.value=1; waterU.hotC.value.set(col);
+    const n=Math.round(70*Math.max(0.6,Q.fall)), geo=new THREE.BufferGeometry(), pos=[];
+    for(let i=0;i<n;i++){ const a=Math.random()*6.283, d=Math.sqrt(Math.random())*r*0.85;
+      pos.push(x+Math.cos(a)*d, Math.random()*1.8-0.2, z+Math.sin(a)*d); }
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    const pts=new THREE.Points(geo,new THREE.PointsMaterial({map:DOT,color:col,size:0.75,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false}));
+    pts.userData={x,z,r}; hotGrp.add(pts);
+  }
+  function setAim(x,z,on,hit){
+    waterU.aim.value.set(x,-z,on?1:0);
+    waterU.aimC.value.set(hit?hotCol:0xe8fff0);
+  }
+  /* Same integrator as the live bobber, run ahead at a fine step. */
+  function predict(dist){
+    const dir=new THREE.Vector3(); cam.getWorldDirection(dir);
+    const p=new THREE.Vector3(); rodTip.getWorldPosition(p);
+    const flat=new THREE.Vector3(dir.x,0,dir.z).normalize();
+    let vx=flat.x*dist*0.42, vy=7.5+dist*0.06, vz=flat.z*dist*0.42; const h=1/120;
+    for(let i=0;i<900&&p.y>0;i++){ vy-=22*h; p.x+=vx*h; p.y+=vy*h; p.z+=vz*h; }
+    return p;
+  }
+  function tex(url){ return texCache[url] || (texCache[url]=new THREE.TextureLoader().load(url)); }
+  /* Ambient fish life: dark silhouettes breaking the surface, so the species stays a mystery. */
+  function jump(url,x,z,k){
+    k=k||1;
+    const m=new THREE.SpriteMaterial({map:tex(url),color:0x0c1814,transparent:true,depthWrite:false,opacity:.95});
+    const sp=new THREE.Sprite(m); sp.scale.set(3.4*k,1.7*k,1); sp.position.set(x,0,z);
+    const dir=Math.random()<0.5?-1:1;
+    jumps.push({s:sp,t:0,vy:5.8+Math.random()*2.2,vx:dir*rnd(1.4,3.0),dir,k});
+    fxGrp.add(sp); ripple(x,z,0xffffff,4.5*k,1.1);
   }
 
   /* ------------------------------ actions -------------------------------- */
@@ -1161,8 +1402,9 @@ const W = (function(){
     bobState='fly'; bobber.visible=true;
   }
   function reelIn(){ bobState='idle'; bobber.visible=false; waterU.bobA.value=0; }
+  function texOf(u){ return tex(u); }
   function fishLeap(tex,col){
-    const m=new THREE.SpriteMaterial({map:new THREE.TextureLoader().load(tex),transparent:true,depthWrite:false});
+    const m=new THREE.SpriteMaterial({map:texOf(tex),transparent:true,depthWrite:false});
     const s=new THREE.Sprite(m); s.scale.set(4.2,2.1,1);
     s.position.set(bobPos.x,0.2,bobPos.z);
     leap={s:s,t:0,vy:7.0,vz:(cam.position.z-bobPos.z)*0.14,vx:(cam.position.x-bobPos.x)*0.14};
@@ -1196,6 +1438,9 @@ const W = (function(){
     }
     waterU.bob.value.set(bobPos.x,-bobPos.z);
     bobber.position.copy(bobPos);
+    if(R.mode==='fight'&&bobState==='float'){
+      const sg=R.fight&&R.fight.surge>0?2.2:1;
+      bobber.position.x+=Math.sin(t*5.7)*0.42*sg; bobber.position.z+=Math.cos(t*4.3)*0.28*sg; }
     bobGlow.material.opacity = R.mode==='bite' ? 0.6+Math.abs(Math.sin(t*14))*0.6 : 0.55;
 
     // line
@@ -1204,9 +1449,10 @@ const W = (function(){
       const arr=lineGeo.attributes.position.array, N=16;
       const sag = bobState==='float' ? (R.mode==='fight'?0.15:0.75) : 0.2;
       for(let i=0;i<N;i++){ const k=i/(N-1);
-        arr[i*3]  =lerp(tmp.x,bobPos.x,k);
-        arr[i*3+1]=lerp(tmp.y,bobPos.y+0.1,k)-Math.sin(k*Math.PI)*sag;
-        arr[i*3+2]=lerp(tmp.z,bobPos.z,k);
+        const bp=bobber.position;
+        arr[i*3]  =lerp(tmp.x,bp.x,k);
+        arr[i*3+1]=lerp(tmp.y,bp.y+0.1,k)-Math.sin(k*Math.PI)*sag;
+        arr[i*3+2]=lerp(tmp.z,bp.z,k);
       }
       lineGeo.attributes.position.needsUpdate=true;
     } else line.visible=false;
@@ -1222,7 +1468,33 @@ const W = (function(){
       leap.s.position.x+=leap.vx*dt; leap.s.position.z+=leap.vz*dt; leap.s.position.y+=leap.vy*dt;
       leap.s.material.rotation=-leap.vy*0.09;
       leap.s.material.opacity=clamp(1.6-leap.t*0.85,0,1);
-      if(leap.t>1.9){ fxGrp.remove(leap.s); leap.s.material.map.dispose(); leap.s.material.dispose(); leap=null; }
+      if(leap.t>1.9){ fxGrp.remove(leap.s); leap.s.material.dispose(); leap=null; }
+    }
+    // ambient jumps
+    for(let i=jumps.length-1;i>=0;i--){ const j=jumps[i]; j.t+=dt; j.vy-=17*dt;
+      j.s.position.x+=j.vx*dt; j.s.position.y+=j.vy*dt;
+      j.s.material.rotation=-j.vy*0.10*j.dir;
+      if(j.s.position.y<0&&j.t>0.25){ ripple(j.s.position.x,j.s.position.z,0xffffff,5*j.k,1.3);
+        fxGrp.remove(j.s); j.s.material.dispose(); jumps.splice(i,1); }
+    }
+    // hotspot life
+    if(hotOn){
+      hotT-=dt;
+      if(hotT<=0){ ripple(hotX+rnd(-hotR,hotR)*0.6, hotZ+rnd(-hotR,hotR)*0.6, hotCol, 3.2, 1.3); hotT=rnd(0.35,0.9); }
+      const hp=hotGrp.children[0];
+      if(hp){ const a=hp.geometry.attributes.position.array;
+        for(let i=1;i<a.length;i+=3){ a[i]+=dt*(0.9+((i*13)%7)*0.18); if(a[i]>1.7){ a[i]=-0.2; } }
+        hp.geometry.attributes.position.needsUpdate=true; }
+    }
+    // weather on the water
+    if(curCond==='rain' && Math.random()<dt*7) ripple(rnd(-22,22), 4.2-rnd(5,42), 0xcfeef5, 2.0, 0.7);
+    // the hooked fish fights at the bobber
+    if(R.mode==='fight' && bobState==='float'){
+      thrashT-=dt;
+      if(thrashT<=0){ const sg=R.fight&&(R.fight.surge>0||R.fight.warn>0);
+        ripple(bobPos.x,bobPos.z, sg?0xffc8b8:0xffffff, sg?10:4.5, sg?1.0:0.8);
+        if(sg) A.plop(1.6);
+        thrashT=sg?0.17:0.42; }
     }
     // particles
     for(const p of parts){
@@ -1238,12 +1510,21 @@ const W = (function(){
       else if(k==='float'){ p.position.y=p.userData.y0+Math.sin(clock*0.5+p.userData.ph)*2.2; p.rotation.y+=dt*0.25; }
       else if(k==='aurora'){ p.material.opacity=0.045+Math.abs(Math.sin(clock*0.22+p.userData.ph))*0.075; }
       else if(k==='arc'){ p.material.opacity=Math.random()>0.94?0.8:0.12; }
+      else if(k==='rain'){ const a=p.geometry.attributes.position.array, d=dt*38;
+        for(let i=0;i<a.length;i+=6){ a[i+1]-=d; a[i+4]-=d;
+          if(a[i+4]<0){ const y=rnd(32,46); a[i+1]=y; a[i+4]=y-1.7; } }
+        p.geometry.attributes.position.needsUpdate=true; }
+      else if(k==='motes'){ const a=p.geometry.attributes.position.array, y0=p.userData.y0;
+        for(let i=0,j=1;j<a.length;i++,j+=3) a[j]=y0[i]+Math.sin(clock*0.7+i*1.3)*0.45;
+        p.geometry.attributes.position.needsUpdate=true; }
     }
     renderer.render(scene,cam);
   }
 
   return {
-    init, build, update, castTo, reelIn, fishLeap, ripple, nudge,
+    init, build, update, castTo, reelIn, fishLeap, ripple, nudge, setHot, setAim, predict, jump,
+    rippleBob(col,sc,life){ ripple(bobPos.x,bobPos.z,col,sc,life); },
+    bobXZ(){ return {x:bobPos.x,z:bobPos.z}; },
     look(dx,dy){ tYaw-=dx*0.0032; tPitch=clamp(tPitch-dy*0.0028,-0.42,0.30); },
     drift(a,dt){ tYaw+=Math.sin(performance.now()*0.0011)*a*dt; tPitch=clamp(tPitch+Math.cos(performance.now()*0.0013)*a*dt*0.5,-0.42,0.30); },
     bobDist(){ return Math.hypot(bobPos.x,bobPos.z); },
@@ -1261,23 +1542,31 @@ const G = (function(){
   function aff(id){ return S.afflict===id; }
 
   /* -------- derived stats -------- */
+  // Skills, gear, codex perks and the day's weather all multiply together here.
   const st = {
-    bracket:()=> clamp(0.225*(1+sk('steady')*0.09)*(aff('shakes')?0.78:1),0.10,0.55),
-    tensCap:()=> 1*(1+sk('tension')*0.12),
+    bracket:()=> clamp(0.225*(1+sk('steady')*0.09)*(aff('shakes')?0.78:1)*gearFx('rod').box
+                 *(pageDone('pond')?1.05:1)*(R.cond==='ash'?0.92:1),0.10,0.60),
+    tensCap:()=> (1+sk('tension')*0.12)*gearFx('line').tens*(pageDone('ridge')?1.08:1),
     tensRate:()=> 0.40*(aff('insomnia')?1.25:1),
-    progRate:()=> 0.225*(1+sk('torque')*0.13),
-    hookWin:()=> 1.05*(1+sk('quickset')*0.35),
-    waitMul:()=> (1-sk('magnet')*0.18)*(aff('phantom')?1.4:1),
-    expoMul:()=> (1-sk('lead')*0.13)
+    progRate:()=> 0.225*(1+sk('torque')*0.13)*gearFx('rod').prog,
+    hookWin:()=> 1.05*(1+sk('quickset')*0.35)*(R.tut?1.6:1),
+    waitMul:()=> (1-sk('magnet')*0.18)*(aff('phantom')?1.4:1)*(pageDone('city')?0.9:1)*(R.cond==='rain'?0.8:1),
+    expoMul:()=> (1-sk('lead')*0.13)*gearFx('suit').dose*(pageDone('basin')?0.92:1)
+                 *(R.cond==='rain'?1.15:(R.cond==='bloom'?1.2:1))
   };
 
   /* -------- fish roll -------- */
-  function rollFish(depth){
+  function rollFish(depth,hot){
     const bait=BAITBY[S.bait];
-    if(Math.random() < bait.anom + sk('keen')*0.0015)
-      return pick(FISH.filter(f=>f.loc==='any'));
     const pool=FISH.filter(f=>f.loc===S.loc);
-    const bias = bait.rar + sk('keen')*0.07 + Math.max(0,depth-0.35)*0.30;
+    // The very first fight is always a calm common, so the coaching has a fair fish to teach on.
+    if(!S.tutDone && S.tutFights===0)
+      return pool.find(f=>f.rarity==='common'&&f.behav==='calm') || pool[0];
+    const anomMul=(pageDone('any')?1.5:1)*(R.cond==='bloom'?2:1);
+    if(Math.random() < (bait.anom + sk('keen')*0.0015)*anomMul)
+      return pick(FISH.filter(f=>f.loc==='any'));
+    const bias = bait.rar + sk('keen')*0.07 + Math.max(0,depth-0.35)*0.30
+               + (pageDone('bay')?0.05:0) + (R.cond==='fog'?0.08:0) + (hot?0.25:0);
     const wt = {common:58*Math.max(0.15,1-bias*1.25), uncommon:27*(1+bias*0.35), rare:9*(1+bias*2.0), epic:2.1*(1+bias*3.6)};
     let tot=0; pool.forEach(f=>tot+=wt[f.rarity]||1);
     let r=Math.random()*tot;
@@ -1289,9 +1578,10 @@ const G = (function(){
     const n=Math.pow(Math.random(), 1/Math.max(0.5,bait.size));
     return {norm:n, cm: Math.round(lerp(f.min,f.max,n)*10)/10};
   }
-  function valueOf(f,n){
+  function valueOf(f,n,mut){
     const toxMul = sk('market') ? 1+f.tox*0.10 : 1-f.tox*0.062;
-    return Math.max(1, Math.round(f.base*RAR[f.rarity].mult*(0.62+0.95*n)*toxMul*(1+sk('haggle')*0.10)));
+    return Math.max(1, Math.round(f.base*RAR[f.rarity].mult*(0.62+0.95*n)*toxMul*(1+sk('haggle')*0.10)
+      *(R.cond==='ash'?1.2:1)*(mut?3:1)));
   }
   function xpOf(f,n){
     let x=RAR[f.rarity].xp*(0.8+0.62*n);
@@ -1313,6 +1603,7 @@ const G = (function(){
     S.cred-=lost; S.exposure=45; S.day++;
     S.afflict = pick(AFFLICT).id;
     endFight(true); R.mode='idle'; W.reelIn();
+    newDay();
     flash(0.9,1200);
     UI.modalText('Meltdown', `<p class="note" style="font-size:14px;line-height:1.7">You wake up on the bank with the rod across your chest and no memory of the last forty minutes.</p>
       <p class="note" style="font-size:14px;line-height:1.7">Someone found you, took ${lost} credits for the trouble, and put you back on the water. The needle reads 45 and it is climbing again.</p>
@@ -1347,6 +1638,7 @@ const G = (function(){
     if(!canCast()) return;
     R.mode='charging'; R.power=0; R.holdT=0;
     $('#actlbl').textContent='Release'; $('#actsub').textContent='power';
+    if(!S.tutDone && S.tutFights===0) UI.hintOn('release when the ring is where you want it');
   }
   function releaseCast(){
     if(R.mode!=='charging') return;
@@ -1354,21 +1646,25 @@ const G = (function(){
     R.castDepth=p;
     S.baits[S.bait]=Math.max(0,S.baits[S.bait]-(Math.random()<sk('frugal')*0.20?0:1));
     if(sk('filter')) { S.exposure=Math.max(0,S.exposure-sk('filter')*1.4); UI.dose(); }
-    R.mode='flying'; $('#power').style.width='0%';
+    R.mode='flying'; $('#power').style.width='0%'; UI.hintOff();
     A.cast(); W.castTo(14+p*46); UI.baits(); UI.action();
   }
   function onLanded(){
     if(R.mode!=='flying') return;
     R.mode='waiting';
     const bait=BAITBY[S.bait];
-    R.waitT = rnd(2.6,7.4)*bait.wait*st.waitMul()*(1+R.castDepth*0.25);
-    R.hooked = rollFish(R.castDepth);
-    UI.action(); UI.hintOn('waiting for a take');
+    const b=W.bobXZ();
+    R.inHot = !!R.hot && Math.hypot(b.x-R.hot.x, b.z-R.hot.z) <= R.hot.r;
+    R.waitT = rnd(2.6,7.4)*bait.wait*st.waitMul()*(1+R.castDepth*0.25)*(R.inHot?0.75:1);
+    R.hooked = rollFish(R.castDepth, R.inHot);
+    UI.action(); UI.hintOn(R.inHot ? 'in the hotspot — waiting for a take' : 'waiting for a take');
   }
   function bite(){
+    R.tut = !S.tutDone && S.tutFights<2;
     R.mode='bite'; R.biteT=st.hookWin();
-    A.bite(); W.ripple(0,0,0xffffff,0,0);
+    A.bite(); W.rippleBob(0xffffff,7,1.0); buzz([45,35,45]);
     $('#bite').classList.add('on'); UI.hintOff(); UI.action();
+    if(R.tut) UI.hintOn('TAP NOW — SET THE HOOK');
     W.nudge(0.6);
   }
   function missed(){
@@ -1380,27 +1676,36 @@ const G = (function(){
   function hook(){
     if(R.mode!=='bite') return;
     $('#bite').classList.remove('on');
+    UI.hintOff();
     const f=R.hooked, sz=rollSize(f);
-    const diff = ({common:1.0,uncommon:1.18,rare:1.36,epic:1.55,anomaly:1.60})[f.rarity] * (0.9+sz.norm*0.35);
+    const mut = !R.tut && Math.random()<mutRate();
+    let diff = ({common:1.0,uncommon:1.18,rare:1.36,epic:1.55,anomaly:1.60})[f.rarity] * (0.9+sz.norm*0.35)
+             * LOCDIFF[S.loc] * (mut?1.1:1);
+    if(R.tut) diff*=0.85;
+    // Coaching: the first fight has no surges at all; the second gets one early, with a warning.
+    const first = R.tut && S.tutFights===0;
     R.fight={
-      f:f, size:sz, diff:diff,
+      f:f, size:sz, diff:diff, mut:mut,
       fy:0.5, ftar:0.5, ft:0,
       by:0.3, bv:0, bh:st.bracket(),
-      prog:0.20, tens:0, surge:0, warn:0, next:rnd(3.0,5.0),
+      prog:0.20, tens:0, surge:0, warn:0, next: first?999:(R.tut?4.0:rnd(3.0,5.0)),
       hold:false, elapsed:0, saved:false
     };
-    R.mode='fight'; A.hook(); W.nudge(1.2);
+    R.mode='fight'; A.hook(); W.nudge(1.2); buzz(25);
+    $('#hud').classList.add('fighting');
     const fn=$('#fightname');
     fn.querySelector('.n').textContent = '???';
     fn.querySelector('.r').textContent = 'UNIDENTIFIED · ' + f.behav.toUpperCase();
     fn.querySelector('.r').style.color = 'var(--dim)';
     $('#quarry').style.backgroundImage=`url(${fishArt(f)})`;
     $('#quarry').style.color=f.art.glow;
-    $('#fight').classList.add('on'); fn.style.display='block';
+    $('#fight').classList.add('on'); fn.style.display=R.tut?'none':'block';
+    UI.coach(R.tut?R.fight:null);
     UI.action();
   }
   function endFight(silent){
     R.fight=null; $('#fight').classList.remove('on'); $('#fightname').style.display='none'; A.reelOff();
+    $('#hud').classList.remove('fighting'); UI.coach(null);
     if(!silent) UI.action();
   }
   function stepFight(dt){
@@ -1424,8 +1729,8 @@ const G = (function(){
 
     // surges
     F.next-=dt;
-    if(F.next<=0 && F.surge<=0 && F.warn<=0){ F.warn=0.60; A.surge(); }
-    if(F.warn>0){ F.warn-=dt; if(F.warn<=0){ F.surge=rnd(0.70,1.05); F.next=rnd(3.4,6.0)/(0.72+F.diff*0.34); W.nudge(1.4); } }
+    if(F.next<=0 && F.surge<=0 && F.warn<=0){ F.warn=R.tut?0.95:0.60; A.surge(); buzz(20); }
+    if(F.warn>0){ F.warn-=dt; if(F.warn<=0){ F.surge=rnd(0.70,1.05); F.next=rnd(3.4,6.0)/(0.72+F.diff*0.34); W.nudge(1.4); buzz(60); } }
     if(F.surge>0) F.surge-=dt;
 
     // bracket
@@ -1455,10 +1760,11 @@ const G = (function(){
     if(F.prog>0.55){ const fn=$('#fightname');
       if(fn.querySelector('.n').textContent==='???'){
         fn.querySelector('.n').textContent=F.f.name;
-        fn.querySelector('.r').textContent=RAR[F.f.rarity].name.toUpperCase()+' · '+TOXNAME[F.f.tox].toUpperCase();
-        fn.querySelector('.r').style.color=RAR[F.f.rarity].col; } }
+        fn.querySelector('.r').textContent=(F.mut?'MUTATED · ':'')+RAR[F.f.rarity].name.toUpperCase()+' · '+TOXNAME[F.f.tox].toUpperCase();
+        fn.querySelector('.r').style.color=F.mut?'var(--anom)':RAR[F.f.rarity].col; } }
 
     UI.fight(F);
+    if(R.tut) UI.coach(F);
   }
   function snap(){
     const F=R.fight;
@@ -1466,7 +1772,7 @@ const G = (function(){
       R.secondWind=true; F.saved=true; F.tens=0.35; F.prog=Math.max(0.5,F.prog);
       A.hook(); toast('Second Wind — the line held.','#7dff9b'); W.nudge(2); return;
     }
-    A.snap(); W.nudge(2.6); flash(0.25,400);
+    A.snap(); W.nudge(2.6); flash(0.25,400); buzz(140);
     endFight(); R.mode='idle'; W.reelIn(); UI.hintOff();
     toast('Line parted. Whatever that was, it is still down there.','#ff4a3d');
   }
@@ -1478,25 +1784,49 @@ const G = (function(){
 
   /* -------- landing -------- */
   function land(){
-    const F=R.fight, f=F.f, n=F.size.norm, cm=F.size.cm;
+    const F=R.fight, f=F.f, n=F.size.norm, cm=F.size.cm, mut=F.mut;
     endFight(true);
-    let val=valueOf(f,n), xp=xpOf(f,n);
+    let val=valueOf(f,n,mut), xp=xpOf(f,n)*(mut?2:1);
     let dbl=false;
     if(sk('double') && Math.random()<0.10){ dbl=true; val=Math.round(val*2); xp=Math.round(xp*1.8); }
-    const isNew=!S.codex[f.id];
-    S.codex[f.id]=true; S.counts[f.id]=(S.counts[f.id]||0)+(dbl?2:1);
+    const qty=dbl?2:1;
+
+    // snapshot pages before logging, so a completion can be detected
+    const pageKey = f.loc;
+    const pageWas = pageDone(pageKey), allWas = Object.keys(S.codex).length>=FISH.length;
+    const isNew=!S.codex[f.id], mutNew = mut && !S.mut[f.id];
+    S.codex[f.id]=true; S.counts[f.id]=(S.counts[f.id]||0)+qty;
+    if(mut) S.mut[f.id]=true;
     if(!S.best[f.id] || cm>S.best[f.id]) S.best[f.id]=cm;
-    S.cred+=val; S.totalCatch+=(dbl?2:1); R.shiftCred+=val; R.shiftFish+=(dbl?2:1);
+    S.cred+=val; S.totalCatch+=qty; R.shiftCred+=val; R.shiftFish+=qty;
 
     const baitTox=BAITBY[S.bait].tox;
     let ex = f.tox*2.6*st.expoMul() + baitTox*1.1*st.expoMul();
-    if(f.tox===0) ex = -2.2;
+    if(f.tox===0) ex = pageDone('shelf') ? -4.4 : -2.2;
+
+    // lab jobs
+    const jobsDone = checkJobs(f,cm,qty);
+    jobsDone.forEach(j=>{ S.cred+=j.cr; R.shiftCred+=j.cr; xp+=j.xp; });
+
+    // tutorial bookkeeping
+    if(R.tut){ S.tutFights++; if(S.tutFights>=2) S.tutDone=true; }
+    R.tut=false;
+
+    // hotspot depletion
+    if(R.inHot && R.hot){ R.hot.left--;
+      if(R.hot.left<=0){ placeHot(); setTimeout(()=>toast('That patch went quiet. Another one is boiling somewhere else.', LOCBY[S.loc].accent2),1200); } }
+
+    // completions queue behind the catch card
+    if(!pageWas && pageDone(pageKey)) UI.queue(...perkModal(pageKey));
+    if(!allWas && Object.keys(S.codex).length>=FISH.length && !S.ended){ S.ended=true; UI.queue(...endingModal()); }
+
     A.land(f.rarity); W.fishLeap(fishArt(f), new THREE.Color(f.art.glow).getHex());
-    W.reelIn(); W.nudge(1.0);
+    W.reelIn(); W.nudge(1.0); buzz(({common:[30],uncommon:[30,40,30],rare:[40,40,40,40,60],epic:[60,40,60,40,120],anomaly:[90,50,90,50,200]})[f.rarity]);
+    if(jobsDone.length) setTimeout(()=>A.job(),520);
     R.mode='reveal';
-    UI.reveal(f,cm,val,xp,isNew,ex,dbl);
+    UI.reveal(f,cm,val,xp,isNew,ex,dbl,{mut,mutNew,jobs:jobsDone});
     addXP(xp); addExposure(ex);
-    UI.hud(); save();
+    UI.hud(); UI.jobs(); save();
   }
 
   /* -------- travel / rest -------- */
@@ -1508,20 +1838,96 @@ const G = (function(){
       S.cred-=l.cost; S.unlocked.push(id); toast('Access granted: '+l.name, l.accent);
     }
     S.loc=id; R.mode='idle'; W.reelIn(); endFight(true);
-    W.build(l, hashStr(id+S.day));
-    document.documentElement.style.setProperty('--accent',l.accent);
-    document.documentElement.style.setProperty('--accent2',l.accent2);
+    enterWater();
     A.drone(LOCS.indexOf(l));
     UI.all(); UI.closeModal(); save();
     toast(l.blurb, l.accent);
+    setTimeout(()=>toast(`${CONDS[R.cond].name}: ${CONDS[R.cond].desc}`, l.accent2),1600);
+  }
+
+  /* Builds the current water for the current day: weather, scene, hotspot. */
+  function enterWater(){
+    const l=LOCBY[S.loc];
+    R.cond=condFor(S.loc,S.day); R.hotN=0;
+    W.build(l, hashStr(S.loc+S.day), R.cond);
+    document.documentElement.style.setProperty('--accent',l.accent);
+    document.documentElement.style.setProperty('--accent2',l.accent2);
+    placeHot();
+  }
+  function placeHot(){
+    const rr=mulberry(hashStr('hot:'+S.loc+':'+S.day+':'+R.hotN));
+    const a=(rr()-0.5)*1.25, d=13+rr()*13;
+    const x=Math.sin(a)*d, z=4.2-Math.cos(a)*d;
+    R.hot={x,z,r:4.2,left:3}; R.hotN++;
+    W.setHot(x,z,4.2,LOCBY[S.loc].accent2);
+  }
+  function newDay(){
+    genJobs(); R.secondWind=false;
+    enterWater();
+  }
+
+  /* ------------------------------- lab jobs ------------------------------ */
+  function genJobs(){
+    const rr=mulberry(hashStr('jobs:'+S.day+':'+S.unlocked.join(',')));
+    const pickR=a=>a[(rr()*a.length)|0];
+    const waters=S.unlocked.slice(), here=S.loc;
+    const pool=FISH.filter(f=>waters.indexOf(f.loc)>=0);
+    const pay=k=>({cr:Math.max(15,Math.round((70+S.lvl*16)*k/5)*5), xp:Math.round((25+S.lvl*7)*k)});
+    const makers={
+      haul:   ()=>{ const n=4+((rr()*3)|0), loc=rr()<0.6?here:pickR(waters); return {k:'haul',loc,need:n,...pay(n/5)}; },
+      lowtox: ()=>{ const n=2+((rr()*2)|0); return {k:'lowtox',need:n,...pay(0.6*n)}; },
+      hot:    ()=>{ return {k:'hot',need:2,...pay(1.3)}; },
+      species:()=>{ const f=pickR(pool.filter(x=>x.rarity!=='epic')); return {k:'species',fish:f.id,need:1,...pay({common:.7,uncommon:1.1,rare:2.0}[f.rarity])}; },
+      trophy: ()=>{ const f=pickR(pool.filter(x=>x.rarity==='common'||x.rarity==='uncommon'));
+                    return {k:'trophy',fish:f.id,len:Math.round(f.min+(f.max-f.min)*0.7),need:1,...pay(1.6)}; },
+      rare:   ()=>{ const loc=rr()<0.6?here:pickR(waters); return {k:'rare',loc,need:1,...pay(2.0)}; }
+    };
+    const kinds=Object.keys(makers);
+    for(let i=kinds.length-1;i>0;i--){ const j=(rr()*(i+1))|0; [kinds[i],kinds[j]]=[kinds[j],kinds[i]]; }
+    S.jobs=kinds.slice(0,3).map(k=>Object.assign({got:0,done:false},makers[k]()));
+    S.jobDay=S.day;
+  }
+  function jobMatch(j,f,cm){
+    switch(j.k){
+      case 'haul':    return S.loc===j.loc;
+      case 'lowtox':  return f.tox<=1;
+      case 'hot':     return f.tox>=3;
+      case 'species': return f.id===j.fish;
+      case 'trophy':  return f.id===j.fish && cm>=j.len;
+      case 'rare':    return S.loc===j.loc && (f.rarity==='rare'||f.rarity==='epic'||f.rarity==='anomaly');
+    }
+    return false;
+  }
+  function checkJobs(f,cm,qty){
+    const out=[];
+    (S.jobs||[]).forEach(j=>{
+      if(j.done||!jobMatch(j,f,cm)) return;
+      j.got=Math.min(j.need, j.got+qty);
+      if(j.got>=j.need){ j.done=true; out.push(j); }
+    });
+    return out;
+  }
+
+  function perkModal(id){
+    const p=PERKS[id], where=id==='any'?'the anomaly register':LOCBY[id].name;
+    return [`Codex page complete`,
+      `<p class="note" style="font-size:14px;line-height:1.7">Every species in ${where} is logged. The lab sends a short note and a box of parts.</p>
+       <p class="note" style="margin-top:12px;font-size:14px"><b style="color:var(--accent)">${p.name}</b>: ${p.desc} Permanent.</p>`];
+  }
+  function endingModal(){
+    return [`Survey complete`,
+      `<p class="note" style="font-size:14px;line-height:1.75">Forty species, logged and measured and sealed in bags with your initials on them. The lab director drives out to the pond himself, which he has not done in eleven years, and stands on the bank for a long time without saying anything.</p>
+       <p class="note" style="font-size:14px;line-height:1.75;margin-top:10px">"We thought the water was dying," he says eventually. "It isn't. It is turning into something, and you are the only one who has been out here long enough to watch it happen."</p>
+       <p class="note" style="font-size:14px;line-height:1.75;margin-top:10px">The jobs keep coming. The fish keep changing. Mutations turn up three times as often from now on, and there are forty of those to log as well.</p>
+       <p class="note" style="margin-top:14px"><span class="big">${Object.keys(S.mut).length}/${FISH.length}</span> mutations logged so far.</p>`];
   }
   function rest(){
     if(R.mode==='fight'||R.mode==='bite'){ toast('Finish the fish first.'); return; }
     R.mode='idle'; W.reelIn(); UI.hintOff();
     const before=S.exposure;
+    const jd=(S.jobs||[]).filter(j=>j.done).length, jn=(S.jobs||[]).length;
     S.exposure=Math.round(before*0.30*10)/10;
     S.day++;
-    R.secondWind=false;
     const prevA=S.afflict; S.afflict=null;
     let body=`<p class="note" style="font-size:14px;line-height:1.7">You break the rod down, wash the deck, and sleep in the truck with the windows cracked.</p>`;
     body+=`<p class="note" style="margin-top:12px"><span class="big">${R.shiftFish}</span> landed &nbsp;·&nbsp; <span class="big">${R.shiftCred} cr</span> earned &nbsp;·&nbsp; dose ${before.toFixed(1)} → <span class="big">${S.exposure.toFixed(1)}</span></p>`;
@@ -1536,7 +1942,9 @@ const G = (function(){
       body+=`<p class="note" style="margin-top:14px;color:var(--clean)">No dreams. Needle low, hands steady.</p>`;
     }
     R.shiftFish=0; R.shiftCred=0;
-    W.build(LOCBY[S.loc], hashStr(S.loc+S.day));
+    newDay();
+    body+=`<p class="note" style="margin-top:14px">Lab jobs yesterday: <span class="big">${jd}/${jn}</span>. Three new ones are posted.</p>
+           <p class="note" style="margin-top:6px">${LOCBY[S.loc].name} this morning: <b style="color:var(--accent2)">${CONDS[R.cond].name}</b>. ${CONDS[R.cond].desc}</p>`;
     UI.modalText(`Day ${S.day}`, body);
     UI.all(); save();
   }
@@ -1547,7 +1955,8 @@ const G = (function(){
     A.cure(); toast(c.name+' used — needle down.','#74ffc9');
     UI.all(); save();
   }
-  return {onLanded,startCharge,releaseCast,bite,missed,hook,stepFight,endFight,travel,rest,useCure,toast,addExposure,st,valueOf,flash};
+  return {onLanded,startCharge,releaseCast,bite,missed,hook,stepFight,endFight,travel,rest,useCure,toast,addExposure,st,valueOf,flash,
+          enterWater,placeHot,genJobs,newDay,rollFish};
 })();
 
 /* ================================== UI ==================================== */
@@ -1557,7 +1966,7 @@ const UI = (function(){
   function hud(){
     const l=LOCBY[S.loc];
     $('#locname').textContent=l.name;
-    $('#locsub').textContent=`DAY ${S.day} · ${l.sub}`;
+    $('#locsub').textContent=`DAY ${S.day} · ${CONDS[R.cond].name.toUpperCase()} · ${l.sub}`;
     $('#lvl').textContent=S.lvl;
     $('#cred').textContent=fmt(S.cred);
     $('#xpbar').style.width=(S.xp/xpNeed(S.lvl)*100).toFixed(1)+'%';
@@ -1600,6 +2009,39 @@ const UI = (function(){
     });
   }
   function toastNo(b){ G.toast('No '+b.name+' left — buy more in Supply.','#ff4a3d'); }
+
+  function jobText(j){
+    const L=id=>LOCBY[id].name;
+    switch(j.k){
+      case 'haul':    return `Land ${j.need} fish at ${L(j.loc)}`;
+      case 'lowtox':  return `Land ${j.need} fish rated Trace or Clean`;
+      case 'hot':     return `Land ${j.need} fish rated Hot or worse`;
+      case 'species': return `Bring in a ${FISHBY[j.fish].name}`;
+      case 'trophy':  return `${FISHBY[j.fish].name}, ${j.len} cm or longer`;
+      case 'rare':    return `Any Rare or better from ${L(j.loc)}`;
+    }
+    return '';
+  }
+  function jobs(){
+    const J=S.jobs||[], done=J.filter(j=>j.done).length;
+    $('#jobs').innerHTML=`<div class="jhead"><span>Lab jobs</span><b>${done}/${J.length}</b></div>
+      <div class="jlist">${J.map(j=>`<div class="job${j.done?' done':''}"><i></i><span>${jobText(j)}</span><em>${j.done?'':(j.need>1?j.got+'/'+j.need:'')}</em></div>`).join('')}</div>`;
+  }
+
+  /* First-catch coach: live instruction driven by the actual fight state. */
+  let coachMsg='';
+  function coach(F){
+    const c=$('#coach');
+    if(!F){ c.classList.remove('on'); coachMsg=''; return; }
+    c.classList.add('on');
+    let msg, col='var(--ink)';
+    if(F.warn>0||F.surge>0){ msg='Surge! Let go now. Holding through it parts the line.'; col='var(--hot)'; }
+    else if(F.tens>0.66){ msg='Line is straining. Let go and let it recover.'; col='var(--warn)'; }
+    else if(F.fy>F.by+F.bh){ msg='Fish is above the box. Hold to raise it.'; }
+    else if(F.fy<F.by){ msg='Fish is below the box. Let go to drop it.'; }
+    else { msg='Inside. Keep it there and progress fills.'; col='var(--accent)'; }
+    if(msg!==coachMsg){ const m=c.querySelector('.cm'); m.textContent=msg; m.style.color=col; coachMsg=msg; }
+  }
   function action(){
     const l=$('#actlbl'), s=$('#actsub'), btn=$('#action');
     btn.classList.toggle('hot', R.mode==='bite');
@@ -1627,12 +2069,18 @@ const UI = (function(){
     $('#fightlbl').textContent = F.warn>0 ? 'SURGE — LET GO' : (F.surge>0 ? 'SURGE' : 'HOLD TO REEL');
     $('#fightlbl').style.color = (F.warn>0||F.surge>0) ? 'var(--hot)' : 'var(--dim)';
   }
-  function reveal(f,cm,val,xp,isNew,ex,dbl){
+  function reveal(f,cm,val,xp,isNew,ex,dbl,x){
+    x=x||{};
     $('#rart').style.backgroundImage=`url(${fishArt(f)})`;
+    $('#rart').style.filter=x.mut?'hue-rotate(150deg) saturate(1.6) brightness(1.1)':'';
     const r=RAR[f.rarity];
-    $('#rrar').textContent=r.name.toUpperCase()+(dbl?' ×2':'');
-    $('#rrar').style.color=r.col;
-    $('#rcard').style.borderColor=r.col;
+    $('#rrar').textContent=(x.mut?'MUTATED · ':'')+r.name.toUpperCase()+(dbl?' ×2':'');
+    $('#rrar').style.color=x.mut?'var(--anom)':r.col;
+    $('#rcard').style.borderColor=x.mut?'var(--anom)':r.col;
+    let ext='';
+    if(x.mutNew) ext+=`<div class="m">NEW MUTATION LOGGED · ${Object.keys(S.mut).length}/${FISH.length}</div>`;
+    (x.jobs||[]).forEach(j=>{ ext+=`<div>Lab job done: ${jobText(j)} · +${j.cr} cr, +${j.xp} xp</div>`; });
+    $('#rextra').innerHTML=ext;
     $('#rname').textContent=f.name;
     $('#rstats').innerHTML=
       `<span>LEN <b>${cm} cm</b></span>
@@ -1649,14 +2097,19 @@ const UI = (function(){
   function closeReveal(){
     $('#reveal').classList.remove('on');
     R.mode='idle'; action(); hintOff();
+    if(R.queue.length && !panel){ const q=R.queue.shift(); modalText(q[0],q[1]); A.level(); }
   }
+  function queue(title,html){ R.queue.push([title,html]); }
 
   /* --------------------------- panels ---------------------------------- */
   function openModal(title,count){
     $('#mtitle').textContent=title; $('#mcount').textContent=count||'';
     $('#modal').classList.add('on'); A.ui();
   }
-  function closeModal(){ $('#modal').classList.remove('on'); $('#mtabs').innerHTML=''; panel=null; }
+  function closeModal(){
+    $('#modal').classList.remove('on'); $('#mtabs').innerHTML=''; panel=null;
+    if(R.queue.length && !$('#reveal').classList.contains('on')){ const q=R.queue.shift(); setTimeout(()=>{ modalText(q[0],q[1]); A.level(); },180); }
+  }
   function modalText(title,html){ openModal(title,''); $('#mtabs').innerHTML=''; $('#mbody').innerHTML=html; panel='text'; }
 
   function open(name){
@@ -1666,11 +2119,64 @@ const UI = (function(){
     else if(name==='skills') skills();
     else if(name==='shop') shop();
     else if(name==='travel') travelP();
+    else if(name==='jobs') jobsP();
+    else if(name==='opts') opts();
+  }
+
+  function jobsP(){
+    const J=S.jobs||[], done=J.filter(j=>j.done).length;
+    openModal('Lab jobs', `DAY ${S.day} · ${done}/${J.length} DONE`);
+    $('#mtabs').innerHTML='';
+    const body=$('#mbody'); body.innerHTML='';
+    J.forEach(j=>{
+      const row=document.createElement('div'); row.className='row';
+      if(j.done) row.style.borderColor='var(--accent)';
+      const bar = j.need>1 ? `<div class="pips">${Array.from({length:j.need},(_,i)=>`<span class="pip${i<j.got?' on':''}"></span>`).join('')}</div>` : '';
+      row.innerHTML=`<div class="bd"><h4 style="${j.done?'color:var(--dim);text-decoration:line-through':''}">${jobText(j)}</h4>
+        <p>${j.done?'Done. Paid out.':'Pays out the moment you land the fish that finishes it.'}</p>${bar}</div>
+        <div style="text-align:right;font-family:var(--f-num);font-size:12px;white-space:nowrap"><div style="color:var(--accent)">+${j.cr} cr</div><div style="color:var(--accent2)">+${j.xp} xp</div></div>`;
+      body.appendChild(row);
+    });
+    const note=document.createElement('p'); note.className='note'; note.style.marginTop='14px';
+    note.textContent='The lab posts three jobs every morning. Whatever is left when you pack up for the night is cleared. Rewards grow with your level.';
+    body.appendChild(note);
+  }
+
+  function opts(){
+    openModal('Settings','');
+    $('#mtabs').innerHTML='';
+    const body=$('#mbody'); body.innerHTML='';
+    function row(title,desc,ctrl){ const r=document.createElement('div'); r.className='optrow';
+      r.innerHTML=`<div class="bd"><h4>${title}</h4>${desc?`<p>${desc}</p>`:''}</div>`; r.appendChild(ctrl); body.appendChild(r); return r; }
+    function seg(opts,cur,on){ const d=document.createElement('div'); d.className='seg';
+      opts.forEach(([v,label])=>{ const b=document.createElement('button'); b.textContent=label; if(v===cur) b.className='sel';
+        b.onclick=()=>{ on(v); A.ui(); opts_(); }; d.appendChild(b); }); return d; }
+    function slider(v,on){ const i=document.createElement('input'); i.type='range'; i.min=0; i.max=100; i.value=Math.round(v*100);
+      i.oninput=()=>on(i.value/100); return i; }
+    const opts_=()=>{ panel=null; open('opts'); };
+
+    row('Sound','',seg([[true,'On'],[false,'Off']],OPT.sound,v=>{ OPT.sound=v; saveOpt(); A.setVol(); }));
+    row('Music','The drone under each water.',slider(OPT.music,v=>{ OPT.music=v; saveOpt(); A.setVol(); }));
+    row('Effects','Reel, splashes, the Geiger counter.',slider(OPT.sfx,v=>{ OPT.sfx=v; saveOpt(); A.setVol(); }));
+    row('Vibration', CAN_BUZZ?'On a bite, the hook, surges and every catch.':'This device or browser does not support vibration.',
+        seg([[true,'On'],[false,'Off']],OPT.haptic,v=>{ OPT.haptic=v; saveOpt(); if(v) buzz(30); }));
+    const qr=row('Graphics', `Light trims the water mesh and particles for older phones. Currently ${LIGHT?'Light':'Full'}. Takes effect after a restart.`,
+        seg([['auto','Auto'],['low','Light'],['high','Full']],OPT.quality,v=>{ OPT.quality=v; saveOpt(); }));
+    const rs=document.createElement('button'); rs.className='buy'; rs.textContent='Restart now'; rs.style.marginLeft='auto';
+    rs.onclick=()=>{ save(); location.reload(); }; qr.appendChild(rs);
+    const tb=document.createElement('button'); tb.className='buy'; tb.textContent=S.tutDone?'Replay':'Active';
+    tb.disabled=!S.tutDone;
+    tb.onclick=()=>{ S.tutDone=false; S.tutFights=0; save(); G.toast('Coaching is back on for your next two catches.'); opts_(); };
+    row('First-catch coaching','Live instructions during your next two fights.',tb);
+    const wb=document.createElement('button'); wb.className='buy danger'; wb.textContent='Erase save'; let armed=false;
+    wb.onclick=()=>{ if(!armed){ armed=true; wb.textContent='Tap again to erase'; return; }
+      try{ localStorage.removeItem(SAVEKEY); }catch(e){} location.reload(); };
+    row('Saved shift',`Level ${S.lvl}, day ${S.day}, ${Object.keys(S.codex).length}/${FISH.length} logged. Settings are kept.`,wb);
   }
 
   function codex(){
-    const got=Object.keys(S.codex).length;
-    openModal('Codex', `${got}/${FISH.length} SPECIMENS LOGGED`);
+    const got=Object.keys(S.codex).length, mn=Object.keys(S.mut).length;
+    openModal('Codex', `${got}/${FISH.length} LOGGED`+((mn||S.ended)?` · ${mn}/${FISH.length} MUTATIONS`:''));
     const tabs=$('#mtabs'); tabs.innerHTML='';
     const groups=[{id:'all',name:'Everything'}].concat(LOCS.map(l=>({id:l.id,name:l.name}))).concat([{id:'any',name:'Anomalies'}]);
     groups.forEach(g=>{
@@ -1687,7 +2193,8 @@ const UI = (function(){
       const loc = gid==='any' ? {name:'Anomalies', sub:'NO FIXED WATER'} : LOCBY[gid];
       const c=list.filter(f=>S.codex[f.id]).length;
       const h=document.createElement('div'); h.className='sect';
-      h.textContent=`${loc.name} — ${c}/${list.length}`;
+      const pk=PERKS[gid], dn=c>=list.length;
+      h.innerHTML=`${loc.name} — ${c}/${list.length}<span style="float:right;letter-spacing:.04em;color:${dn?'var(--accent)':'var(--dim)'}">${dn?'✓ ':'Complete for '}${pk.name}: ${pk.desc}</span>`;
       body.appendChild(h);
       const grid=document.createElement('div'); grid.className='wrapgrid';
       list.forEach(f=>{
@@ -1699,6 +2206,7 @@ const UI = (function(){
           <div class="meta" style="color:${known?r.col:'var(--dim)'}">${known?r.name:'???'}</div>
           ${known?`<div class="meta">${f.min}–${f.max} cm · best ${S.best[f.id]||'—'} cm · ×${S.counts[f.id]||0}</div>
           <div class="meta" style="color:${TOXCOL[f.tox]}">${TOXNAME[f.tox]} · ${f.tox} rad/lvl</div>
+          ${S.mut[f.id]?'<div class="meta" style="color:var(--anom)">Mutation logged</div>':''}
           <p>${f.flavor}</p>`:`<div class="meta">catch one to log it</div>`}`;
         grid.appendChild(card);
       });
@@ -1737,7 +2245,20 @@ const UI = (function(){
     openModal('Supply', `${fmt(S.cred)} CREDITS`);
     $('#mtabs').innerHTML='';
     const body=$('#mbody'); body.innerHTML='';
-    const h1=document.createElement('div'); h1.className='sect'; h1.textContent='Bait — sold in tens'; body.appendChild(h1);
+    const hg=document.createElement('div'); hg.className='sect'; hg.textContent='Gear — permanent upgrades'; body.appendChild(hg);
+    GEAR.forEach(g=>{
+      const t=S.gear[g.id]||0, cur=g.tiers[t], nxt=g.tiers[t+1];
+      const row=document.createElement('div'); row.className='row';
+      const pips=g.tiers.map((_,i)=>`<span class="pip${i<=t?' on':''}"></span>`).join('');
+      row.innerHTML=`<div class="bd"><h4>${g.name}: ${cur.name}</h4>
+        <p>${nxt?`Next: <b style="color:var(--ink)">${nxt.name}</b>. ${nxt.desc}`:`Top tier. ${cur.desc}`}</p><div class="pips">${pips}</div></div>`;
+      const btn=document.createElement('button'); btn.className='buy';
+      btn.textContent=nxt?`${nxt.cost} cr`:'Maxed'; btn.disabled=!nxt||S.cred<nxt.cost;
+      btn.onclick=()=>{ if(!nxt||S.cred<nxt.cost) return; S.cred-=nxt.cost; S.gear[g.id]=t+1;
+        A.level(); G.toast(`${nxt.name} fitted.`); save(); all(); shop(); };
+      row.appendChild(btn); body.appendChild(row);
+    });
+    const h1=document.createElement('div'); h1.className='sect'; h1.style.marginTop='20px'; h1.textContent='Bait — sold in tens'; body.appendChild(h1);
     BAITS.forEach(b=>{
       const price=b.cost*10;
       const row=document.createElement('div'); row.className='row';
@@ -1776,7 +2297,7 @@ const UI = (function(){
       const caught=FISH.filter(f=>f.loc===l.id&&S.codex[f.id]).length, total=FISH.filter(f=>f.loc===l.id).length;
       const row=document.createElement('div'); row.className='row'; row.style.borderColor=open?l.accent+'55':'var(--edge)';
       row.innerHTML=`<div class="bd"><h4 style="color:${open?l.accent:'var(--dim)'}">${l.name}</h4>
-        <p style="font-family:var(--f-num);font-size:10.5px;letter-spacing:.08em">${l.sub} · ${caught}/${total} logged</p>
+        <p style="font-family:var(--f-num);font-size:10.5px;letter-spacing:.08em">${l.sub} · ${caught}/${total} logged${open?` · TODAY: ${CONDS[condFor(l.id,S.day)].name.toUpperCase()}`:''}</p>
         <p>${open?l.blurb:`Sealed. Requires level ${l.lvl}${l.cost?` and ${l.cost} credits for the gate pass`:''}.`}</p></div>`;
       const btn=document.createElement('button'); btn.className='buy';
       btn.style.borderColor=l.accent; btn.style.color=l.accent;
@@ -1790,8 +2311,8 @@ const UI = (function(){
     body.appendChild(note);
   }
 
-  function all(){ hud(); dose(); baits(); action(); }
-  return {hud,dose,baits,action,fight,hintOn,hintOff,reveal,closeReveal,open,closeModal,modalText,all,isOpen:()=>!!panel};
+  function all(){ hud(); dose(); baits(); action(); jobs(); }
+  return {hud,dose,baits,action,fight,hintOn,hintOff,reveal,closeReveal,open,closeModal,modalText,all,jobs,coach,queue,isOpen:()=>!!panel};
 })();
 
 /* ================================ INPUT =================================== */
@@ -1843,6 +2364,7 @@ const UI = (function(){
     if(k==='enter'&&$('#reveal').classList.contains('on')){ UI.closeReveal(); return; }
     if(blocked()&&!$('#modal').classList.contains('on')) return;
     if(k==='c') UI.open('codex');
+    else if(k==='j') UI.open('jobs');
     else if(k==='k') UI.open('skills');
     else if(k==='b') UI.open('shop');
     else if(k==='m') UI.open('travel');
@@ -1857,6 +2379,16 @@ const UI = (function(){
 
   document.querySelectorAll('.rbtn[data-panel]').forEach(b=>b.onclick=()=>UI.open(b.dataset.panel));
   $('#restbtn').onclick=()=>G.rest();
+  $('#jobs').onclick=()=>UI.open('jobs');
+  $('#optbtn').onclick=()=>UI.open('opts');
+  // Any touch brings audio back after iOS interrupts it (calls, app switches).
+  document.addEventListener('pointerdown',()=>{ if(R.playing) A.start(); },{capture:true,passive:true});
+  document.addEventListener('visibilitychange',()=>{
+    // Only save once a shift has started: on the title screen S may not reflect
+    // anything the player did, and saving there would overwrite a real save.
+    if(document.hidden){ release(); A.suspend(); if(R.playing) save(); }
+    else if(R.playing) A.start();
+  });
   $('#mclose').onclick=()=>UI.closeModal();
   $('#rcont').onclick=()=>UI.closeReveal();
   addEventListener('blur',()=>release());
@@ -1875,6 +2407,9 @@ function frame(now){
       R.power=(Math.sin(R.holdT*2.5-Math.PI/2)+1)/2;
       $('#power').style.width=(R.power*100)+'%';
       $('#power').style.background = R.power>0.78?'var(--warn)':'var(--accent)';
+      const p=W.predict(14+R.power*46);
+      const hit=!!R.hot && Math.hypot(p.x-R.hot.x,p.z-R.hot.z)<=R.hot.r;
+      W.setAim(p.x,p.z,true,hit); R.aimOn=true;
     }
     else if(R.mode==='waiting'){
       R.waitT-=dt;
@@ -1885,6 +2420,18 @@ function frame(now){
       if(R.biteT<=0) G.missed();
     }
     else if(R.mode==='fight'){ G.stepFight(dt); }
+    if(R.mode!=='charging' && R.aimOn){ W.setAim(0,0,false,false); R.aimOn=false; }
+
+    // fish life: silhouettes breaking the surface, more often over the hotspot
+    R.jumpT-=dt;
+    if(R.jumpT<=0){
+      const pool=FISH.filter(f=>f.loc===S.loc), f=pick(pool);
+      let x,z,k=0.8;
+      if(R.hot && Math.random()<0.45){ x=R.hot.x+rnd(-2,2); z=R.hot.z+rnd(-2,2); k=0.9; A.plop(0.8); }
+      else { const a=rnd(-1.15,1.15), d=rnd(30,85); x=Math.sin(a)*d; z=4.2-Math.cos(a)*d; k=0.55+d/120; }
+      W.jump(fishArt(f),x,z,k);
+      R.jumpT=rnd(3.5,9);
+    }
 
     // geiger + exposure ambience
     const e=S.exposure;
@@ -1915,9 +2462,8 @@ function frame(now){
   }
   const had=load();
   const l=LOCBY[S.loc];
-  document.documentElement.style.setProperty('--accent',l.accent);
-  document.documentElement.style.setProperty('--accent2',l.accent2);
-  W.build(l, hashStr(S.loc+S.day));
+  if(S.jobDay!==S.day || !S.jobs.length) G.genJobs();
+  G.enterWater();
   UI.all();
 
   if(had){
@@ -1932,11 +2478,11 @@ function frame(now){
     A.start(); A.drone(LOCS.indexOf(LOCBY[S.loc]));
     UI.all();
     if(!had){
-      setTimeout(()=>G.toast('Hold Cast to charge. Further out means deeper water and better fish.','#7dff9b'),500);
-      setTimeout(()=>G.toast('When the line jumps, set the hook fast.','#ffc83c'),3400);
-      setTimeout(()=>G.toast('Reel in bursts. Left bar is your progress, right bar is line tension — let go before it tops out.','#49c8ff'),6300);
+      setTimeout(()=>G.toast('Hold Cast to charge. The ring on the water shows where it will land.','#7dff9b'),500);
+      setTimeout(()=>G.toast('Bubbling water is a hotspot. Cast into it for better fish.',LOCBY[S.loc].accent2),4200);
     } else {
       setTimeout(()=>G.toast(LOCBY[S.loc].blurb, LOCBY[S.loc].accent),500);
+      setTimeout(()=>G.toast(`${CONDS[R.cond].name}: ${CONDS[R.cond].desc}`, LOCBY[S.loc].accent2),2400);
     }
   };
   $('#wipe').onclick=()=>{
